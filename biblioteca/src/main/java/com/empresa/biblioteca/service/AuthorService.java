@@ -32,7 +32,21 @@ public class AuthorService {
 
     // mostrar autor por id
     public AuthorDTO findById(Long id) {
-        Author author = authorRepository.findById(Math.toIntExact(id)).orElse(new Author());
+        Author author = authorRepository.findById(id).orElse(new Author());
+        return toDTO(author);
+    }
+
+    // eliminar autor segun id
+    public void deleteById(Long id) {
+        Author author = authorRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        authorRepository.deleteById(author.getId());
+    }
+
+    // actualizar actor
+    public AuthorDTO modifyAuthor(Long authorId, AuthorDTO authorDTO) {
+        Author author = authorRepository.findById(authorId).orElseThrow(IllegalArgumentException::new);
+        author = updateAuthor(authorId, authorDTO);
+        author = authorRepository.save(author);
         return toDTO(author);
     }
 
@@ -73,4 +87,18 @@ public class AuthorService {
         return author;
     }
 
+
+    // metodo para actualizar un Author a partir de un AuthorDTO
+    public Author updateAuthor(Long authorId, AuthorDTO authorDTO) {
+        Author author = authorRepository.findById(authorId).orElseThrow(IllegalArgumentException::new);
+
+        if (authorDTO.getName() != null) author.setName(authorDTO.getName());
+        if (authorDTO.getLastName() != null) author.setLastName(authorDTO.getLastName());
+        if (authorDTO.getBiography() != null) author.setBiography(authorDTO.getBiography());
+        if (authorDTO.getEmail() != null) author.setEmail(authorDTO.getEmail());
+        if (authorDTO.getNationality() != null) author.setNationality(authorDTO.getNationality());
+        if (authorDTO.getBirthDate() != null) author.setBirthDate(authorDTO.getBirthDate());
+
+        return author;
+    }
 }

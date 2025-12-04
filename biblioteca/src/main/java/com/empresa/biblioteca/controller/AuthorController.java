@@ -35,4 +35,15 @@ public class AuthorController {
         return authorService.findById(id);
     }
 
+    // eliminar autor
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable Long id) {
+        authorService.deleteById(id);
+    }
+
+    // actualizar autor
+    @PutMapping("/{id}")
+    public AuthorDTO modifyAuthor(@PathVariable Long id, @RequestBody AuthorDTO authorDTO) {
+        return  authorService.modifyAuthor(id, authorDTO);
+    }
 }
