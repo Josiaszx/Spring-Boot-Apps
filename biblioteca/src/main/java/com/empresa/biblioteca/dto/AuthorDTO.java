@@ -1,37 +1,22 @@
-package com.empresa.biblioteca.model;
-
-import jakarta.persistence.*;
+package com.empresa.biblioteca.dto;
 
 import java.util.Date;
 
-@Entity
-@Table(name = "authors")
-public class Author {
+public class AuthorDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(length = 30, nullable = false)
     private String name;
 
-    @Column(length = 30, nullable = false)
     private String lastName;
 
-    @Column(length = 30, unique = true)
     private String email;
 
-    @Column(length = 30, nullable = false)
     private String nationality;
 
-    @Column(nullable = false)
     private Date birthDate;
 
-    @Column
     private String biography;
 
-    public Author(Long id, String name, String lastName, String email, String nationality, Date birthDate, String biography) {
-        this.id = id;
+    public AuthorDTO(String name, String lastName, String email, String nationality, Date birthDate, String biography) {
         this.name = name;
         this.lastName = lastName;
         this.email = email;
@@ -39,16 +24,7 @@ public class Author {
         this.birthDate = birthDate;
         this.biography = biography;
     }
-
-    public Author() {}
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public AuthorDTO() {}
 
     public String getName() {
         return name;
