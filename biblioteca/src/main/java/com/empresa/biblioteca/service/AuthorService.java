@@ -88,7 +88,7 @@ public class AuthorService {
     }
 
 
-    // metodo para actualizar un Author a partir de un AuthorDTO
+    // metodo para actualizar un Author a partir de un AuthorDTO con posible valores null
     public Author updateAuthor(Long authorId, AuthorDTO authorDTO) {
         Author author = authorRepository.findById(authorId).orElseThrow(IllegalArgumentException::new);
 
