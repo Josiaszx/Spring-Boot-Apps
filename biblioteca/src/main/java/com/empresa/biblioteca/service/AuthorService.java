@@ -19,8 +19,10 @@ public class AuthorService {
 
 
     // agregar nuevo autor
-    public Author save(Author author) {
-        return authorRepository.save(author);
+    public AuthorDTO save(AuthorDTO authorDTO) {
+        Author author = toEntity(authorDTO);
+        author = authorRepository.save(author);
+        return toDTO(author);
     }
 
     // mostrar todos los autores
@@ -59,6 +61,16 @@ public class AuthorService {
         return authorDTOs;
     }
 
-
+    // convertir AuthorDTO a Author
+    public Author toEntity(AuthorDTO authorDTO) {
+        Author author = new Author();
+        author.setName(authorDTO.getName());
+        author.setLastName(authorDTO.getLastName());
+        author.setBiography(authorDTO.getBiography());
+        author.setEmail(authorDTO.getEmail());
+        author.setNationality(authorDTO.getNationality());
+        author.setBirthDate(authorDTO.getBirthDate());
+        return author;
+    }
 
 }
