@@ -1,59 +1,36 @@
-package com.empresa.biblioteca.model;
+package com.empresa.biblioteca.dto;
 
-import jakarta.persistence.*;
-import org.springframework.boot.context.properties.bind.DefaultValue;
+import jakarta.persistence.Column;
 
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "members")
-public class Member {
+public class MemberDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(unique = true, length = 40)
     private String memberShipNumber;
 
-    @Column(length = 30, nullable = false)
     private String firstName;
 
-    @Column(length = 30, nullable = false)
     private String lastName;
 
-    @Column(length = 50, nullable = false, unique = true)
     private String email;
 
-    @Column(length = 30, nullable = false, unique = true)
     private String phone;
 
-    @Column(nullable = false, updatable = false)
     private LocalDate registrationDate;
 
-    @Column()
-    private boolean active;
+    private Boolean active;
 
-    public Member(Long id, String memberShipNumber, String firstName, String lastName, String email, String phone, LocalDate registrationDate, boolean active) {
-        this.id = id;
+    public MemberDTO(String memberShipNumber, String firstName, String lastName, String email, String phone, LocalDate registrationDate, Boolean active) {
         this.memberShipNumber = memberShipNumber;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phone = phone;
         this.registrationDate = registrationDate;
-        this.active = active;
+        this.active = active == null || active;
     }
 
-    public Member() {}
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public MemberDTO() {}
 
     public String getMemberShipNumber() {
         return memberShipNumber;
@@ -103,13 +80,11 @@ public class Member {
         this.registrationDate = registrationDate;
     }
 
-    public boolean isActive() {
+    public Boolean isActive() {
         return active;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(Boolean active) {
         this.active = active;
     }
-
-
 }

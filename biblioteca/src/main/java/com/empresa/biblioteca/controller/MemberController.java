@@ -1,0 +1,46 @@
+package com.empresa.biblioteca.controller;
+
+import com.empresa.biblioteca.dto.MemberDTO;
+import com.empresa.biblioteca.model.Member;
+import com.empresa.biblioteca.service.MemberService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/members")
+public class MemberController {
+
+    final private MemberService memberService;
+
+    public MemberController(MemberService memberService) {
+        this.memberService = memberService;
+    }
+
+    @PostMapping
+    public MemberDTO save(@RequestBody MemberDTO memberDTO) {
+        return memberService.save(memberDTO);
+    }
+
+    @GetMapping
+    public List<MemberDTO> findAll() {
+        return memberService.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public MemberDTO findById(@PathVariable Long id) {
+        return memberService.findById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        memberService.delete(id);
+    }
+
+    @PutMapping("/{id}")
+    public MemberDTO update(@PathVariable Long id, @RequestBody MemberDTO memberDTO) {
+        return memberService.update(memberDTO, id);
+    }
+
+
+}
