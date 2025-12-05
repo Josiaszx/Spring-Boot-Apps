@@ -45,6 +45,27 @@ public class BookService {
         return toDTO(book);
     }
 
+    // mostrar libro segun isbn
+    public BookDTO findByIsbn(String isbn) {
+        var book = bookRepository.findByIsbn(isbn);
+        if  (book == null) return new BookDTO();
+        return toDTO(book);
+    }
+
+    // buscar libro por titulo
+    public BookDTO findByTitle(String title) {
+        var book = bookRepository.findByTitle(title);
+        if  (book == null) return new BookDTO();
+        return toDTO(book);
+    }
+
+    // listar libros disponibles
+    public List<BookDTO> findByAvailableCopies() {
+        List<Book> books = bookRepository.findAllByAvailableCopies();
+        if (books == null) return new ArrayList<>();
+        return toDTOList(books);
+    }
+
     // agregar libro
     public BookDTO save(PostBookDTO postBookDTO) {
         var category = categoryRepository.findById(postBookDTO.getCategoryId())
@@ -76,7 +97,8 @@ public class BookService {
         bookRepository.deleteById(id);
     }
 
-    // metodos de mappeo
+
+    // ----- metodos de mappeo -----
     // Book a BookDTO
     public BookDTO toDTO(Book book) {
         BookDTO bookDTO = new BookDTO();
