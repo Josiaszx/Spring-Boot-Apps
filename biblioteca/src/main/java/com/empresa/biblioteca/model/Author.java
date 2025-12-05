@@ -2,6 +2,7 @@ package com.empresa.biblioteca.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -25,12 +26,12 @@ public class Author {
     private String nationality;
 
     @Column(nullable = false)
-    private Date birthDate;
+    private LocalDate birthDate;
 
     @Column
     private String biography;
 
-    public Author(Long id, String name, String lastName, String email, String nationality, Date birthDate, String biography) {
+    public Author(Long id, String name, String lastName, String email, String nationality, LocalDate birthDate, String biography) {
         this.id = id;
         this.name = name;
         this.lastName = lastName;
@@ -82,11 +83,11 @@ public class Author {
         this.nationality = nationality;
     }
 
-    public Date getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
 

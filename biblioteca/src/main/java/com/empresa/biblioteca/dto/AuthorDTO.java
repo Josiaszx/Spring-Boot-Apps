@@ -1,5 +1,6 @@
 package com.empresa.biblioteca.dto;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class AuthorDTO {
@@ -12,11 +13,11 @@ public class AuthorDTO {
 
     private String nationality;
 
-    private Date birthDate;
+    private LocalDate birthDate;
 
     private String biography;
 
-    public AuthorDTO(String name, String lastName, String email, String nationality, Date birthDate, String biography) {
+    public AuthorDTO(String name, String lastName, String email, String nationality, LocalDate birthDate, String biography) {
         this.name = name;
         this.lastName = lastName;
         this.email = email;
@@ -58,11 +59,11 @@ public class AuthorDTO {
         this.nationality = nationality;
     }
 
-    public Date getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
 

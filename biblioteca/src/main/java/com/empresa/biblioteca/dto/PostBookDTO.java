@@ -1,66 +1,39 @@
-package com.empresa.biblioteca.model;
-
-import jakarta.persistence.*;
+package com.empresa.biblioteca.dto;
 
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "books")
-public class Book {
+// clase para agregar un nuevo libro
+// a diferencia de BookDTO, espera el id del autor y de la categoria del libro
+public class PostBookDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(length = 20, unique = true, nullable = false)
     private String isbn;
 
-    @Column(length = 60, unique = true, nullable = false)
     private String title;
 
-    @Column(length = 40, nullable = false)
     private String publisher;
 
-    @Column(nullable = false)
     private LocalDate publishedDate;
 
-    @Column(nullable = false)
     private Integer availableCopies;
 
-    @Column(nullable = false)
     private Integer totalCopies;
 
-    @ManyToOne
-    @JoinColumn(name = "author_id")
-    Author author;
+    Long authorId;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    Category category;
+    Long categoryId;
 
-
-    // constructores y getters/setters
-    public Book(Long id, String isbn, String title, String publisher, LocalDate publishedDate, Integer availableCopies, Integer totalCopies, Author author, Category category) {
-        this.id = id;
+    public PostBookDTO(String isbn, String title, String publisher, LocalDate publishedDate, Integer availableCopies, Integer totalCopies, Long authorId, Long categoryId) {
         this.isbn = isbn;
         this.title = title;
         this.publisher = publisher;
         this.publishedDate = publishedDate;
         this.availableCopies = availableCopies;
         this.totalCopies = totalCopies;
-        this.author = author;
-        this.category = category;
+        this.authorId = authorId;
+        this.categoryId = categoryId;
     }
 
-    public Book() {}
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public PostBookDTO() {}
 
     public String getIsbn() {
         return isbn;
@@ -110,19 +83,20 @@ public class Book {
         this.totalCopies = totalCopies;
     }
 
-    public Author getAuthor() {
-        return author;
+    public Long getAuthorId() {
+        return authorId;
     }
 
-    public void setAuthor(Author author) {
-        this.author = author;
+    public void setAuthorId(Long authorId) {
+        this.authorId = authorId;
     }
 
-    public Category getCategory() {
-        return category;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 }
+
