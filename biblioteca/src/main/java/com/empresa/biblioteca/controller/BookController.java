@@ -6,6 +6,7 @@ import com.empresa.biblioteca.service.BookService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 /*
@@ -80,5 +81,9 @@ public class BookController {
         bookService.delete(id);
     }
 
-
+    // GET /api/books/stats
+    @GetMapping("/stats")
+    public Map<String, String> getStats() {
+        return bookService.findMostBorrowedBooks();
+    }
 }

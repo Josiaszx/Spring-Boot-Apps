@@ -2,6 +2,7 @@ package com.empresa.biblioteca.service;
 
 import com.empresa.biblioteca.dto.LoanDTO;
 import com.empresa.biblioteca.dto.PostLoanDTO;
+import com.empresa.biblioteca.model.Book;
 import com.empresa.biblioteca.model.Loan;
 import com.empresa.biblioteca.model.LoanStatus;
 import com.empresa.biblioteca.model.Member;
@@ -33,6 +34,10 @@ public class LoanService {
     // registrar prestamo
     public LoanDTO save(PostLoanDTO postLoanDTO) {
         Loan loan = toEntity(postLoanDTO);
+        Book book = bookRepository.findById(postLoanDTO.getBookId()).orElse(null);
+        if (book.getAvailableCopies() == 0) return null;
+        book.setAvailableCopies(book.getAvailableCopies() - 1);
+        bookRepository.save(book);
         loan = loanRepository.save(loan);
         return toDTO(loan);
     }
@@ -40,6 +45,12 @@ public class LoanService {
     // devolver libro
     public LoanDTO returnBook(Long loanId) {
         var loan = loanRepository.findById(loanId).orElseThrow(IllegalStateException::new);
+        if (loan.getStatus() == LoanStatus.CLOSED) return null;
+
+        var book = loan.getBook();
+        book.setAvailableCopies(book.getAvailableCopies() + 1);
+        bookRepository.save(book);
+
         loan.setStatus(LoanStatus.CLOSED);
         loan.setReturnDate(LocalDate.now());
         loan = loanRepository.save(loan);

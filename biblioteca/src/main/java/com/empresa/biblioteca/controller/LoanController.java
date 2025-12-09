@@ -23,7 +23,7 @@ public class LoanController {
     }
 
     // PUT /api/loans/{id}/return - devolver libro
-    @GetMapping("/{id}/return")
+    @PutMapping("/{id}/return")
     public LoanDTO returnBook(@PathVariable Long id){
         return loanService.returnBook(id);
     }

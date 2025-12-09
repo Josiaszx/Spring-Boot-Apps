@@ -10,10 +10,13 @@ import com.empresa.biblioteca.model.Category;
 import com.empresa.biblioteca.repository.AuthorRepository;
 import com.empresa.biblioteca.repository.BookRepository;
 import com.empresa.biblioteca.repository.CategoryRepository;
+import com.empresa.biblioteca.repository.LoanRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BookService {
@@ -21,15 +24,18 @@ public class BookService {
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
     private final CategoryRepository categoryRepository;
+    private final LoanRepository loanRepository;
 
     public BookService(
             BookRepository bookRepository,
             CategoryRepository categoryRepository,
-            AuthorRepository authorRepository
+            AuthorRepository authorRepository,
+            LoanRepository loanRepository
     ) {
         this.bookRepository = bookRepository;
         this.categoryRepository = categoryRepository;
         this.authorRepository = authorRepository;
+        this.loanRepository = loanRepository;
     }
 
 
@@ -97,6 +103,13 @@ public class BookService {
         bookRepository.deleteById(id);
     }
 
+    // mostrar libros mas prestado
+    public Map<String, String> findMostBorrowedBooks() {
+        var mostBorrowedBooks = loanRepository.findMostBorrowedBook();
+        Map<String, String> stats = new HashMap<>();
+        stats.put("Libro mas prestado", mostBorrowedBooks.getTitle());
+        return stats;
+    }
 
     // ----- metodos de mappeo -----
     // Book a BookDTO
