@@ -1,7 +1,10 @@
 package com.empresa.biblioteca.service;
 
+import com.empresa.biblioteca.dto.LoanDTO;
 import com.empresa.biblioteca.dto.MemberDTO;
+import com.empresa.biblioteca.model.Loan;
 import com.empresa.biblioteca.model.Member;
+import com.empresa.biblioteca.repository.LoanRepository;
 import com.empresa.biblioteca.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +15,16 @@ import java.util.List;
 public class MemberService {
 
     final private MemberRepository memberRepository;
-    public MemberService(MemberRepository memberRepository) {
+    final private LoanRepository loanRepository;
+    final private LoanService loanService;
+    public MemberService(
+            MemberRepository memberRepository,
+            LoanRepository loanRepository,
+            LoanService loanService
+    ) {
         this.memberRepository = memberRepository;
+        this.loanRepository = loanRepository;
+        this.loanService = loanService;
     }
 
     // agregar nuevo miembro
@@ -45,6 +56,13 @@ public class MemberService {
         Member member = updateMember(memberDTO, id);
         member = memberRepository.save(member);
         return toDTO(member);
+    }
+
+    // mostrar prestamos de un miembro
+    public List<LoanDTO> findAllMemberLoans(Long idUser) {
+        var member = memberRepository.findById(idUser).orElseThrow(IllegalStateException::new);
+        var memberLoans = loanRepository.findAllByMemberIs(member);
+        return loanService.toDTOList(memberLoans);
     }
 
     // metodos de mappeo

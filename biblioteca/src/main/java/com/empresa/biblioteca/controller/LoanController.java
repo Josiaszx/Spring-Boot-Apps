@@ -1,16 +1,49 @@
 package com.empresa.biblioteca.controller;
 
-import com.empresa.biblioteca.service.BookService;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.empresa.biblioteca.dto.LoanDTO;
+import com.empresa.biblioteca.dto.PostLoanDTO;
+import com.empresa.biblioteca.service.LoanService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/loans")
 public class LoanController {
 
-    final private BookService bookService;
-    public LoanController(BookService bookService) {
-        this.bookService = bookService;
+    final private LoanService loanService;
+    public LoanController(LoanService loanService) {
+        this.loanService = loanService;
+    }
+
+    // POST /api/loans - Registrar préstamo
+    @PostMapping
+    public LoanDTO save(@RequestBody PostLoanDTO postLoanDTO) {
+        return loanService.save(postLoanDTO);
+    }
+
+    // PUT /api/loans/{id}/return - devolver libro
+    @GetMapping("/{id}/return")
+    public LoanDTO returnBook(@PathVariable Long id){
+        return loanService.returnBook(id);
+    }
+
+    // GET /api/loans/active - Préstamos activos
+    @GetMapping("/active")
+    public List<LoanDTO> findAllActive() {
+        return loanService.findAllActive();
+    }
+
+    // GET /api/loans/overdue - Prestamos vencidos
+    @GetMapping("/overdue")
+    public List<LoanDTO> findAllOverdue() {
+        return loanService.findAllOverdue();
+    }
+
+    // GET /api/loans/{id} - Prestamo segun id
+    @GetMapping("/{id}")
+    public LoanDTO findById(@PathVariable long id) {
+        return loanService.findById(id);
     }
 
 

@@ -26,15 +26,16 @@ public class Loan {
     @Column(nullable = false)
     private LocalDate dueDate;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private LocalDate returnDate;
 
-    @Column(nullable = false, length = 20)
-    private String status;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING) // se mappeara como string en la tabla de la BD
+    private LoanStatus status;
 
     // constructores y metodos de acceso
 
-    public Loan(Long id, Book book, Member member, LocalDate loanDate, LocalDate dueDate, LocalDate returnDate, String status) {
+    public Loan(Long id, Book book, Member member, LocalDate loanDate, LocalDate dueDate, LocalDate returnDate, LoanStatus status) {
         this.id = id;
         this.book = book;
         this.member = member;
@@ -94,11 +95,11 @@ public class Loan {
         this.returnDate = returnDate;
     }
 
-    public String getStatus() {
+    public LoanStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(LoanStatus status) {
         this.status = status;
     }
 }

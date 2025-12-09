@@ -1,5 +1,6 @@
 package com.empresa.biblioteca.controller;
 
+import com.empresa.biblioteca.dto.LoanDTO;
 import com.empresa.biblioteca.dto.MemberDTO;
 import com.empresa.biblioteca.model.Member;
 import com.empresa.biblioteca.service.MemberService;
@@ -42,5 +43,8 @@ public class MemberController {
         return memberService.update(memberDTO, id);
     }
 
-
+    @GetMapping("{id}/loans")
+    public List<LoanDTO> findAllMemberLoans(@PathVariable Long id) {
+        return memberService.findAllMemberLoans(id);
+    }
 }

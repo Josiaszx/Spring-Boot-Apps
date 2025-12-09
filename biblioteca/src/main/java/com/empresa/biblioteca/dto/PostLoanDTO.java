@@ -4,11 +4,11 @@ import com.empresa.biblioteca.model.LoanStatus;
 
 import java.time.LocalDate;
 
-public class LoanDTO {
+public class PostLoanDTO {
 
-    private String bookName;
+    private Long bookId;
 
-    private String memberName;
+    private Long memberId;
 
     private LocalDate loanDate;
 
@@ -18,31 +18,31 @@ public class LoanDTO {
 
     private LoanStatus status;
 
-    public LoanDTO(String bookName, String memberName, LocalDate loanDate, LocalDate dueDate, LocalDate returnDate, LoanStatus status) {
-        this.bookName = bookName;
-        this.memberName = memberName;
+    public PostLoanDTO(Long bookId, Long memberId, LocalDate loanDate, LocalDate dueDate, LocalDate returnDate, LoanStatus status) {
+        this.bookId = bookId;
+        this.memberId = memberId;
         this.loanDate = loanDate;
         this.dueDate = dueDate;
         this.returnDate = returnDate;
         this.status = status;
     }
 
-    public LoanDTO() {}
+    public PostLoanDTO() {}
 
-    public String getBookName() {
-        return bookName;
+    public Long getBookId() {
+        return bookId;
     }
 
-    public void setBookName(String bookName) {
-        this.bookName = bookName;
+    public void setBookId(Long bookId) {
+        this.bookId = bookId;
     }
 
-    public String getMemberName() {
-        return memberName;
+    public Long getMemberId() {
+        return memberId;
     }
 
-    public void setMemberName(String memberName) {
-        this.memberName = memberName;
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
     }
 
     public LocalDate getLoanDate() {
