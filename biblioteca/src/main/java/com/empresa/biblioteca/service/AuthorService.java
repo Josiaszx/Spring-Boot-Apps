@@ -1,8 +1,10 @@
 package com.empresa.biblioteca.service;
 
 import com.empresa.biblioteca.dto.AuthorDTO;
+import com.empresa.biblioteca.dto.BookDTO;
 import com.empresa.biblioteca.model.Author;
 import com.empresa.biblioteca.repository.AuthorRepository;
+import com.empresa.biblioteca.repository.BookRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,17 +16,17 @@ import java.util.List;
 public class AuthorService {
 
     final private AuthorRepository authorRepository;
+    final private BookRepository bookRepository;
+    final private BookService bookService;
 
-    public AuthorService(AuthorRepository authorRepository) {
+    public AuthorService(
+            AuthorRepository authorRepository,
+            BookRepository bookRepository,
+            BookService bookservice
+    ) {
         this.authorRepository = authorRepository;
-    }
-
-
-    // agregar nuevo autor
-    public AuthorDTO save(AuthorDTO authorDTO) {
-        Author author = new Author(authorDTO);
-        author = authorRepository.save(author);
-        return new AuthorDTO(author);
+        this.bookRepository = bookRepository;
+        this.bookService = bookservice;
     }
 
     // mostrar todos los autores
@@ -39,10 +41,18 @@ public class AuthorService {
         return new AuthorDTO(author);
     }
 
-    // eliminar autor segun id
-    public void deleteById(Long id) {
-        Author author = authorRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-        authorRepository.deleteById(author.getId());
+    // mostrar libros de una autor
+    public List<BookDTO>  findBooksByAuthorId(Long authorId) {
+        var author = authorRepository.findById(authorId).orElseThrow(IllegalArgumentException::new);
+        var books = bookRepository.findAllByAuthorIs(author);
+        return bookService.toDTOList(books);
+    }
+
+    // agregar nuevo autor
+    public AuthorDTO save(AuthorDTO authorDTO) {
+        Author author = new Author(authorDTO);
+        author = authorRepository.save(author);
+        return new AuthorDTO(author);
     }
 
     // actualizar actor
@@ -53,6 +63,14 @@ public class AuthorService {
         return new AuthorDTO(author);
     }
 
+    // eliminar autor segun id
+    public void deleteById(Long id) {
+        Author author = authorRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        authorRepository.deleteById(author.getId());
+    }
+
+
+    // ---- Metodos de mappeo ----
     // convertir Author en AuthorDTO
     public List<AuthorDTO> toDTOList(List<Author> authors) {
         List<AuthorDTO> authorDTOs = new ArrayList<>();

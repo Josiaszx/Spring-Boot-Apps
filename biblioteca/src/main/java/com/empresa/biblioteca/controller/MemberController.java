@@ -11,6 +11,16 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/*
+    Endpoints a implementar
+        1 - POST api/members/ ... agregar meimbro
+        2 - GET api/members/ ... mostrar los miembros paginados
+        3 - GET api/members/id ... mostrar segun id
+        4 - DELELTE api/members/id ... eliminar
+        5 - PUT api/members/id ... actualizar
+        6 - GET api/members/id/loans ... mostrar prestamos de un miembro
+*/
+
 @RestController
 @RequestMapping("/api/members")
 public class MemberController {
@@ -21,11 +31,13 @@ public class MemberController {
         this.memberService = memberService;
     }
 
+    // 1 - POST api/members/ ... agregar meimbro
     @PostMapping
     public MemberDTO save(@RequestBody MemberDTO memberDTO) {
         return memberService.save(memberDTO);
     }
 
+    // 2 - GET api/members/ ... mostrar los miembros paginados
     @GetMapping
     public Page<MemberDTO> findAll(
             @RequestParam(defaultValue = "0") int page, // por defecto la pagina retornada cera la 0
@@ -36,21 +48,25 @@ public class MemberController {
         return memberService.findAll(pageable);
     }
 
+    // 3 - GET api/members/id ... mostrar segun id
     @GetMapping("/{id}")
     public MemberDTO findById(@PathVariable Long id) {
         return memberService.findById(id);
     }
 
+    // 4 - DELELTE api/members/id ... eliminar
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         memberService.delete(id);
     }
 
+    // 5 - PUT api/members/id ... actualizar
     @PutMapping("/{id}")
     public MemberDTO update(@PathVariable Long id, @RequestBody MemberDTO memberDTO) {
         return memberService.update(memberDTO, id);
     }
 
+    // 6 - GET api/members/id/loans ... mostrar prestamos de un miembro
     @GetMapping("{id}/loans")
     public List<LoanDTO> findAllMemberLoans(@PathVariable Long id) {
         return memberService.findAllMemberLoans(id);

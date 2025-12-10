@@ -50,6 +50,7 @@ public class CategoryService {
         categoryRepository.deleteById(id);
     }
 
+    // ---- Metodos de mappeo ----
     // mappera List<Category> a List<CategoryDTO>
     public List<CategoryDTO> toDTOList(List<Category> categoryList) {
         List<CategoryDTO> dtoList = new ArrayList<>();

@@ -77,18 +77,17 @@ public class LoanService {
         return toDTOList(loanRepository.findAllByStatusIs(LoanStatus.OVERDUE));
     }
 
-    // listar todos los prestamos de un miembro
-    public List<LoanDTO> findAllLoansFromOneUser(Long userId) {
-        Member member = memberRepository.findById(userId).orElseThrow(IllegalStateException::new);
-        return toDTOList(loanRepository.findAllByMemberIs(member));
-    }
-
     // mostrar prestamo segun id
     public LoanDTO findById(long id) {
         var loan = loanRepository.findById(id).orElseThrow(IllegalStateException::new);
         return new LoanDTO(loan);
     }
 
+    // listar todos los prestamos de un miembro
+    public List<LoanDTO> findAllLoansFromOneUser(Long userId) {
+        Member member = memberRepository.findById(userId).orElseThrow(IllegalStateException::new);
+        return toDTOList(loanRepository.findAllByMemberIs(member));
+    }
 
     // ----- metodos de mappeo -----
 

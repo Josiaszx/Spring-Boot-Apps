@@ -10,6 +10,15 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/*
+    Endpoints a implementar
+        1 - POST /api/loans ... Registrar préstamo
+        2 - PUT /api/loans/{id}/return ... Devolver libro
+        3 - GET /api/loans/active ... Préstamos activos
+        4 - GET /api/loans/overdue ... Préstamos vencidos
+        5 - GET /api/members/{id}/loans ... Historial de miembro
+*/
+
 @RestController
 @RequestMapping("/api/loans")
 public class LoanController {
@@ -19,19 +28,19 @@ public class LoanController {
         this.loanService = loanService;
     }
 
-    // POST /api/loans - Registrar préstamo
+    // 1 - POST /api/loans ... Registrar préstamo
     @PostMapping
     public LoanDTO save(@RequestBody PostLoanDTO postLoanDTO) {
         return loanService.save(postLoanDTO);
     }
 
-    // PUT /api/loans/{id}/return - devolver libro
+    // 2 - PUT /api/loans/{id}/return - devolver libro
     @PutMapping("/{id}/return")
     public LoanDTO returnBook(@PathVariable Long id){
         return loanService.returnBook(id);
     }
 
-    // GET /api/loans/active - Préstamos activos
+    // 3 - GET /api/loans/active - Préstamos activos
     @GetMapping("/active")
     public Page<LoanDTO> findAllActive(
             @RequestParam(defaultValue = "0") int page,
@@ -41,13 +50,13 @@ public class LoanController {
         return loanService.findAllActive(pageable);
     }
 
-    // GET /api/loans/overdue - Prestamos vencidos
+    // 4 - GET /api/loans/overdue - Prestamos vencidos
     @GetMapping("/overdue")
     public List<LoanDTO> findAllOverdue() {
         return loanService.findAllOverdue();
     }
 
-    // GET /api/loans/{id} - Prestamo segun id
+    // 5 - GET /api/loans/{id} - Prestamo segun id
     @GetMapping("/{id}")
     public LoanDTO findById(@PathVariable long id) {
         return loanService.findById(id);

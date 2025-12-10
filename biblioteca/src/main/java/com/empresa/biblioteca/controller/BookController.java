@@ -21,6 +21,7 @@ Endpoints a implementar:
     6 - POST /api/books - Crear nuevo libro
     7 - PUT /api/books/{id} - Actualizar libro
     8 - DELETE /api/books/{id} - Eliminar libro
+    9 - GET /api/books/stats - obtener datos sobre los prestaos de libros
 */
 
 
@@ -87,7 +88,7 @@ public class BookController {
         bookService.delete(id);
     }
 
-    // GET /api/books/stats
+    // 9 - GET /api/books/stats - obtener datos sobre los prestaos de libros
     @GetMapping("/stats")
     public Map<String, String> getStats() {
         return bookService.findMostBorrowedBooks();
