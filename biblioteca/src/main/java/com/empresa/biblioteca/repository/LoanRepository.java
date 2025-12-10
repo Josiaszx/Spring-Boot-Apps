@@ -24,4 +24,19 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
     // obtener libro mas prestado
     @Query(value = "SELECT b.* FROM books b JOIN loans l ON l.book_id = b.id GROUP BY b.id ORDER BY COUNT(*) DESC LIMIT 1", nativeQuery = true)
     Book findMostBorrowedBook();
+
+    // obtener miembor con mas prestamos activos
+    @Query(
+            value =
+                """
+                select m.* from loans l
+                join members m on l.member_id = m.id
+                where l.status = 'ACTIVE'
+                group by m.id
+                order by count(*) desc
+                limit 1
+                """,
+            nativeQuery = true
+    )
+    Member findMemberWithMostLoans();
 }

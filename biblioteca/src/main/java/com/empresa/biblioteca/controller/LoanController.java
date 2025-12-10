@@ -39,7 +39,6 @@ public class LoanController {
     ) {
         Pageable pageable = PageRequest.of(page, size);
         return loanService.findAllActive(pageable);
-//        return loanService.findAllActive();
     }
 
     // GET /api/loans/overdue - Prestamos vencidos

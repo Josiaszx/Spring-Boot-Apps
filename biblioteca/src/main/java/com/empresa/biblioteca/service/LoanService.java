@@ -69,7 +69,6 @@ public class LoanService {
     // listar prestamos activos
     public Page<LoanDTO> findAllActive(Pageable pageable) {
         var loans = loanRepository.findAllByStatusIs(LoanStatus.ACTIVE, pageable);
-//        return toDTOList(loanRepository.findAllByStatusIs(pageable, LoanStatus.ACTIVE));
         return loans.map(LoanDTO::new);
     }
 
@@ -92,17 +91,6 @@ public class LoanService {
 
 
     // ----- metodos de mappeo -----
-    // Loan a LoanDTO
-//    public LoanDTO toDTO(Loan loan) {
-//        var loanDTO = new LoanDTO();
-//        loanDTO.setDueDate(loan.getDueDate());
-//        loanDTO.setLoanDate(loan.getLoanDate());
-//        loanDTO.setStatus(loan.getStatus());
-//        loanDTO.setBookName(loan.getBook().getTitle());
-//        loanDTO.setMemberName(loan.getMember().getFirstName() + " " + loan.getMember().getLastName());
-//        loanDTO.setReturnDate(loan.getReturnDate());
-//        return loanDTO;
-//    }
 
     // List<Loan> a List<LoanDTO>
     public List<LoanDTO> toDTOList(List<Loan> loans) {
@@ -112,21 +100,4 @@ public class LoanService {
         }
         return loansDTO;
     }
-
-    // PostLoanDTO a Loan
-//    public Loan toEntity(PostLoanDTO postLoanDTO) {
-//        var loan = new Loan();
-//        var book = bookRepository.findById(postLoanDTO.getBookId())
-//                        .orElseThrow(IllegalArgumentException::new);
-//        var member = memberRepository.findById(postLoanDTO.getMemberId())
-//                        .orElseThrow(IllegalArgumentException::new);
-//
-//        loan.setDueDate(postLoanDTO.getDueDate());
-//        loan.setLoanDate(postLoanDTO.getLoanDate());
-//        loan.setStatus(postLoanDTO.getStatus());
-//        loan.setBook(book);
-//        loan.setMember(member);
-//        loan.setReturnDate(postLoanDTO.getReturnDate());
-//        return loan;
-//    }
 }

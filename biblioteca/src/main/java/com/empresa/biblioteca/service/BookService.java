@@ -105,28 +105,27 @@ public class BookService {
         bookRepository.deleteById(id);
     }
 
-    // mostrar libros mas prestado
+    // mostrar datos sobre los libros
     public Map<String, String> findMostBorrowedBooks() {
-        var mostBorrowedBooks = loanRepository.findMostBorrowedBook();
+
         Map<String, String> stats = new HashMap<>();
+
+        // libro mas prestado
+        var mostBorrowedBooks = loanRepository.findMostBorrowedBook();
         stats.put("Libro mas prestado", mostBorrowedBooks.getTitle());
+
+        // miembro con mas prestamos activos
+        var memberWithMostLoans = loanRepository.findMemberWithMostLoans();
+        stats.put("Miembro con mas prestamos activos",
+                        memberWithMostLoans.getFirstName() +
+                        " " +
+                        memberWithMostLoans.getLastName()
+        );
+
         return stats;
     }
 
     // ----- metodos de mappeo -----
-    // Book a BookDTO
-//    public BookDTO toDTO(Book book) {
-//        BookDTO bookDTO = new BookDTO();
-//        bookDTO.setIsbn(book.getIsbn());
-//        bookDTO.setTitle(book.getTitle());
-//        bookDTO.setAuthorName(book.getAuthor().getName() +  " " + book.getAuthor().getLastName());
-//        bookDTO.setCategory(book.getCategory().getName());
-//        bookDTO.setPublisher(book.getPublisher());
-//        bookDTO.setTotalCopies(book.getTotalCopies());
-//        bookDTO.setAvailableCopies(book.getAvailableCopies());
-//        bookDTO.setPublishedDate(book.getPublishedDate());
-//        return bookDTO;
-//    }
 
     // List<Book> a List<BookDTO>
     public List<BookDTO> toDTOList(List<Book> books) {
@@ -136,20 +135,6 @@ public class BookService {
         }
         return bookDTOList;
     }
-
-    // PostBookDTO a Book
-//    public Book toEntity(PostBookDTO postBookDTO, Author author, Category category) {
-//        Book book = new Book();
-//        book.setIsbn(postBookDTO.getIsbn());
-//        book.setTitle(postBookDTO.getTitle());
-//        book.setPublishedDate(postBookDTO.getPublishedDate());
-//        book.setPublisher(postBookDTO.getPublisher());
-//        book.setAvailableCopies(postBookDTO.getAvailableCopies());
-//        book.setTotalCopies(postBookDTO.getTotalCopies());
-//        book.setCategory(category);
-//        book.setAuthor(author);
-//        return book;
-//    }
 
     // actualizar libro
     public void updateBook(Book book, PostBookDTO postBookDTO) {
