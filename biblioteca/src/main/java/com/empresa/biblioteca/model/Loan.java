@@ -1,5 +1,7 @@
 package com.empresa.biblioteca.model;
 
+import com.empresa.biblioteca.dto.LoanDTO;
+import com.empresa.biblioteca.dto.PostLoanDTO;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -43,6 +45,15 @@ public class Loan {
         this.dueDate = dueDate;
         this.returnDate = returnDate;
         this.status = status;
+    }
+
+    public Loan(PostLoanDTO postLoanDTO, Member member, Book book) {
+        this.loanDate = postLoanDTO.getLoanDate();
+        this.dueDate = postLoanDTO.getDueDate();
+        this.returnDate = postLoanDTO.getReturnDate();
+        this.status = postLoanDTO.getStatus();
+        this.member = member;
+        this.book = book;
     }
 
     public Loan() {}

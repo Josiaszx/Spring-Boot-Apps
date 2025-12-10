@@ -6,6 +6,8 @@ import com.empresa.biblioteca.model.Loan;
 import com.empresa.biblioteca.model.Member;
 import com.empresa.biblioteca.repository.LoanRepository;
 import com.empresa.biblioteca.repository.MemberRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -29,21 +31,21 @@ public class MemberService {
 
     // agregar nuevo miembro
     public MemberDTO save(MemberDTO memberDTO) {
-        Member member = toEntity(memberDTO);
+        Member member = new Member(memberDTO);
         member = memberRepository.save(member);
-        return toDTO(member);
+        return new MemberDTO(member);
     }
 
     // mostrar todos los miembros
-    public List<MemberDTO> findAll() {
-        List<Member> members = memberRepository.findAll();
-        return toDTOList(members);
+    public Page<MemberDTO> findAll(Pageable pageable) {
+        var members = memberRepository.findAll(pageable);
+        return members.map(MemberDTO::new);
     }
 
     // mostrar miembro por id
     public MemberDTO findById(Long id) {
-        Member member = memberRepository.findById(id).orElse(null);
-        return toDTO(member);
+        Member member = memberRepository.findById(id).orElse(new Member());
+        return new MemberDTO(member);
     }
 
     // eliminar miembro
@@ -55,7 +57,7 @@ public class MemberService {
     public MemberDTO update(MemberDTO memberDTO, Long id) {
         Member member = updateMember(memberDTO, id);
         member = memberRepository.save(member);
-        return toDTO(member);
+        return new MemberDTO(member);
     }
 
     // mostrar prestamos de un miembro
@@ -66,37 +68,13 @@ public class MemberService {
     }
 
     // metodos de mappeo
-    // MemberDTO a Member
-    public Member toEntity(MemberDTO memberDTO) {
-        Member member = new Member();
-        member.setFirstName(memberDTO.getFirstName());
-        member.setLastName(memberDTO.getLastName());
-        member.setEmail(memberDTO.getEmail());
-        member.setPhone(memberDTO.getPhone());
-        member.setActive(memberDTO.isActive());
-        member.setRegistrationDate(memberDTO.getRegistrationDate());
-        member.setMemberShipNumber(memberDTO.getMemberShipNumber());
-        return member;
-    }
-
-    // Member a MemberDTO
-    public MemberDTO toDTO(Member member) {
-        MemberDTO memberDTO = new MemberDTO();
-        memberDTO.setFirstName(member.getFirstName());
-        memberDTO.setLastName(member.getLastName());
-        memberDTO.setEmail(member.getEmail());
-        memberDTO.setPhone(member.getPhone());
-        memberDTO.setActive(member.isActive());
-        memberDTO.setRegistrationDate(member.getRegistrationDate());
-        memberDTO.setMemberShipNumber(member.getMemberShipNumber());
-        return memberDTO;
-    }
 
     // List<Member> a List<MemberDTO>
     public List<MemberDTO> toDTOList(List<Member> members) {
         List<MemberDTO> memberDTOList = new ArrayList<>();
         for (Member member : members) {
-            memberDTOList.add(toDTO(member));
+            var memberDTO = new MemberDTO(member);
+            memberDTOList.add(memberDTO);
         }
         return memberDTOList;
     }

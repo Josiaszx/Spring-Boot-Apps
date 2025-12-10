@@ -1,5 +1,6 @@
 package com.empresa.biblioteca.dto;
 
+import com.empresa.biblioteca.model.Member;
 import jakarta.persistence.Column;
 
 import java.time.LocalDate;
@@ -30,7 +31,18 @@ public class MemberDTO {
         this.active = active == null || active;
     }
 
+    public MemberDTO(Member member) {
+        this.memberShipNumber = member.getMemberShipNumber();
+        this.firstName = member.getFirstName();
+        this.lastName = member.getLastName();
+        this.email = member.getEmail();
+        this.phone = member.getPhone();
+        this.registrationDate = member.getRegistrationDate();
+        this.active = member.isActive();
+    }
+
     public MemberDTO() {}
+
 
     public String getMemberShipNumber() {
         return memberShipNumber;

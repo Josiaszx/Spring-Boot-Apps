@@ -3,6 +3,8 @@ package com.empresa.biblioteca.controller;
 import com.empresa.biblioteca.dto.CategoryDTO;
 import com.empresa.biblioteca.model.Category;
 import com.empresa.biblioteca.service.CategoryService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,8 +19,12 @@ public class CategoryController {
     }
 
     @GetMapping
-    public List<CategoryDTO> findAll() {
-        return categoryService.findAll();
+    public Page<CategoryDTO> findAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
+    ) {
+        var pageable = PageRequest.of(page, size);
+        return categoryService.findAll(pageable);
     }
 
     @PostMapping

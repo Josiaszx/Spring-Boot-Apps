@@ -1,5 +1,6 @@
 package com.empresa.biblioteca.model;
 
+import com.empresa.biblioteca.dto.MemberDTO;
 import jakarta.persistence.*;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
@@ -43,6 +44,16 @@ public class Member {
         this.phone = phone;
         this.registrationDate = registrationDate;
         this.active = active;
+    }
+
+    public Member(MemberDTO memberDTO) {
+        this.memberShipNumber = memberDTO.getMemberShipNumber();
+        this.firstName = memberDTO.getFirstName();
+        this.lastName = memberDTO.getLastName();
+        this.email = memberDTO.getEmail();
+        this.phone = memberDTO.getPhone();
+        this.registrationDate = memberDTO.getRegistrationDate();
+        this.active = memberDTO.isActive();
     }
 
     public Member() {}

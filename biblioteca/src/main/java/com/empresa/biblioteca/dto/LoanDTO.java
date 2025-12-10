@@ -1,5 +1,6 @@
 package com.empresa.biblioteca.dto;
 
+import com.empresa.biblioteca.model.Loan;
 import com.empresa.biblioteca.model.LoanStatus;
 
 import java.time.LocalDate;
@@ -27,7 +28,18 @@ public class LoanDTO {
         this.status = status;
     }
 
+    public LoanDTO(Loan loan) {
+        this.bookName = loan.getBook().getTitle();
+        this.memberName = loan.getMember().getFirstName() + " " + loan.getMember().getLastName();
+        this.loanDate = loan.getLoanDate();
+        this.dueDate = loan.getDueDate();
+        this.returnDate = loan.getReturnDate();
+        this.status = loan.getStatus();
+    }
+
+
     public LoanDTO() {}
+
 
     public String getBookName() {
         return bookName;

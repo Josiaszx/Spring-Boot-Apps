@@ -3,6 +3,8 @@ package com.empresa.biblioteca.service;
 import com.empresa.biblioteca.dto.AuthorDTO;
 import com.empresa.biblioteca.model.Author;
 import com.empresa.biblioteca.repository.AuthorRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,20 +22,21 @@ public class AuthorService {
 
     // agregar nuevo autor
     public AuthorDTO save(AuthorDTO authorDTO) {
-        Author author = toEntity(authorDTO);
+        Author author = new Author(authorDTO);
         author = authorRepository.save(author);
-        return toDTO(author);
+        return new AuthorDTO(author);
     }
 
     // mostrar todos los autores
-    public List<AuthorDTO>  findAll() {
-        return toDTOList(authorRepository.findAll());
+    public Page<AuthorDTO> findAll(Pageable pageable) {
+        return authorRepository.findAll(pageable)
+                .map(AuthorDTO::new);
     }
 
     // mostrar autor por id
     public AuthorDTO findById(Long id) {
         Author author = authorRepository.findById(id).orElse(new Author());
-        return toDTO(author);
+        return new AuthorDTO(author);
     }
 
     // eliminar autor segun id
@@ -47,46 +50,18 @@ public class AuthorService {
         Author author = authorRepository.findById(authorId).orElseThrow(IllegalArgumentException::new);
         author = updateAuthor(authorId, authorDTO);
         author = authorRepository.save(author);
-        return toDTO(author);
-    }
-
-    // metodos de mappeo
-    // convertir lista de Author en lista de AuthorDTO
-    public AuthorDTO toDTO(Author author) {
-        AuthorDTO authorDTO = new AuthorDTO();
-
-        authorDTO.setName(author.getName());
-        authorDTO.setLastName(author.getLastName());
-        authorDTO.setBiography(author.getBiography());
-        authorDTO.setEmail(author.getEmail());
-        authorDTO.setNationality(author.getNationality());
-        authorDTO.setBirthDate(author.getBirthDate());
-
-        return authorDTO;
+        return new AuthorDTO(author);
     }
 
     // convertir Author en AuthorDTO
     public List<AuthorDTO> toDTOList(List<Author> authors) {
         List<AuthorDTO> authorDTOs = new ArrayList<>();
         for (Author author : authors) {
-            AuthorDTO authorDTO = toDTO(author);
+            AuthorDTO authorDTO = new AuthorDTO(author);
             authorDTOs.add(authorDTO);
         }
         return authorDTOs;
     }
-
-    // convertir AuthorDTO a Author
-    public Author toEntity(AuthorDTO authorDTO) {
-        Author author = new Author();
-        author.setName(authorDTO.getName());
-        author.setLastName(authorDTO.getLastName());
-        author.setBiography(authorDTO.getBiography());
-        author.setEmail(authorDTO.getEmail());
-        author.setNationality(authorDTO.getNationality());
-        author.setBirthDate(authorDTO.getBirthDate());
-        return author;
-    }
-
 
     // metodo para actualizar un Author a partir de un AuthorDTO con posible valores null
     public Author updateAuthor(Long authorId, AuthorDTO authorDTO) {

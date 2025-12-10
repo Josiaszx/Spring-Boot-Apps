@@ -4,6 +4,8 @@ import com.empresa.biblioteca.dto.AuthorDTO;
 import com.empresa.biblioteca.model.Author;
 import com.empresa.biblioteca.repository.AuthorRepository;
 import com.empresa.biblioteca.service.AuthorService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,8 +27,12 @@ public class AuthorController {
 
     // listar autores
     @GetMapping
-    public List<AuthorDTO> findAll() {
-        return authorService.findAll();
+    public Page<AuthorDTO> findAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
+    ) {
+        var pageable = PageRequest.of(page, size);
+        return authorService.findAll(pageable);
     }
 
     // listar autor

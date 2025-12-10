@@ -1,6 +1,7 @@
 package com.empresa.biblioteca.dto;
 
 import com.empresa.biblioteca.model.Author;
+import com.empresa.biblioteca.model.Book;
 import com.empresa.biblioteca.model.Category;
 import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
@@ -35,6 +36,17 @@ public class BookDTO {
         this.totalCopies = totalCopies;
         this.authorName = authorName;
         this.category = category;
+    }
+
+    public BookDTO(Book book) {
+        this.isbn = book.getIsbn();
+        this.title = book.getTitle();
+        this.publisher = book.getPublisher();
+        this.publishedDate = book.getPublishedDate();
+        this.availableCopies = book.getAvailableCopies();
+        this.totalCopies = book.getTotalCopies();
+        this.authorName = book.getAuthor().getName() + " " + book.getAuthor().getLastName();
+        this.category = book.getCategory().getName();
     }
 
     public BookDTO() {}

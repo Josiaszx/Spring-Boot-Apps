@@ -21,7 +21,7 @@ public class PostLoanDTO {
     public PostLoanDTO(Long bookId, Long memberId, LocalDate loanDate, LocalDate dueDate, LocalDate returnDate, LoanStatus status) {
         this.bookId = bookId;
         this.memberId = memberId;
-        this.loanDate = loanDate;
+        this.loanDate = loanDate == null ? LocalDate.now() : loanDate;
         this.dueDate = dueDate;
         this.returnDate = returnDate;
         this.status = status;

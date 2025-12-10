@@ -1,5 +1,7 @@
 package com.empresa.biblioteca.dto;
 
+import com.empresa.biblioteca.model.Author;
+
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -25,6 +27,16 @@ public class AuthorDTO {
         this.birthDate = birthDate;
         this.biography = biography;
     }
+
+    public AuthorDTO(Author author) {
+        this.name = author.getName();
+        this.lastName = author.getLastName();
+        this.email = author.getEmail();
+        this.nationality = author.getNationality();
+        this.birthDate = author.getBirthDate();
+        this.biography = author.getBiography();
+    }
+
     public AuthorDTO() {}
 
     public String getName() {

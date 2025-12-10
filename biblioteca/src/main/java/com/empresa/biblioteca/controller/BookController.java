@@ -3,6 +3,8 @@ package com.empresa.biblioteca.controller;
 import com.empresa.biblioteca.dto.BookDTO;
 import com.empresa.biblioteca.dto.PostBookDTO;
 import com.empresa.biblioteca.service.BookService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,7 +13,7 @@ import java.util.Map;
 
 /*
 Endpoints a implementar:
-    1 - GET /api/books - Obtener todos los libros
+    1 - GET /api/books - Obtener lista paginada de libros
     2 - GET /api/books/{id} - Obtener libro por ID
     3 - GET /api/books/isbn/{isbn} - Obtener libro por ISBN
     4 - GET /api/books/search?title=xyz - Buscar libros por título
@@ -33,10 +35,14 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    // 1 - GET /api/books - Obtener todos los libros
+    // 1 - GET /api/books - Obtener lista paginada de libros
     @GetMapping
-    public List<BookDTO> findAll() {
-        return bookService.findAll();
+    public Page<BookDTO> findAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
+    ) {
+        var pageable = PageRequest.of(page, size);
+        return bookService.findAll(pageable);
     }
 
     // 2 - GET /api/books/{id} - Obtener libro por ID

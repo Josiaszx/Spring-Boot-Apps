@@ -1,5 +1,6 @@
 package com.empresa.biblioteca.model;
 
+import com.empresa.biblioteca.dto.AuthorDTO;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -39,6 +40,15 @@ public class Author {
         this.nationality = nationality;
         this.birthDate = birthDate;
         this.biography = biography;
+    }
+
+    public Author(AuthorDTO authorDTO) {
+        this.name = authorDTO.getName();
+        this.lastName = authorDTO.getLastName();
+        this.email = authorDTO.getEmail();
+        this.nationality = authorDTO.getNationality();
+        this.birthDate = authorDTO.getBirthDate();
+        this.biography = authorDTO.getBiography();
     }
 
     public Author() {}

@@ -11,6 +11,8 @@ import com.empresa.biblioteca.repository.AuthorRepository;
 import com.empresa.biblioteca.repository.BookRepository;
 import com.empresa.biblioteca.repository.CategoryRepository;
 import com.empresa.biblioteca.repository.LoanRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -40,29 +42,29 @@ public class BookService {
 
 
     // listar libros
-    public List<BookDTO> findAll() {
-        List<Book> books = bookRepository.findAll();
-        return toDTOList(books);
+    public Page<BookDTO> findAll(Pageable pageable) {
+        var books = bookRepository.findAll(pageable);
+        return books.map(BookDTO::new);
     }
 
     // mostrar libro segun id
     public BookDTO findById(Long id) {
         Book book = bookRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-        return toDTO(book);
+        return new BookDTO(book);
     }
 
     // mostrar libro segun isbn
     public BookDTO findByIsbn(String isbn) {
         var book = bookRepository.findByIsbn(isbn);
         if  (book == null) return new BookDTO();
-        return toDTO(book);
+        return new BookDTO(book);
     }
 
     // buscar libro por titulo
     public BookDTO findByTitle(String title) {
         var book = bookRepository.findByTitle(title);
         if  (book == null) return new BookDTO();
-        return toDTO(book);
+        return new BookDTO(book);
     }
 
     // listar libros disponibles
@@ -80,9 +82,9 @@ public class BookService {
         var author = authorRepository.findById(postBookDTO.getAuthorId())
                 .orElseThrow(IllegalArgumentException::new);
 
-        var book = toEntity(postBookDTO, author, category);
+        var book = new Book(postBookDTO,  author, category);
         book =  bookRepository.save(book);
-        return toDTO(book);
+        return new BookDTO(book);
     }
 
     // actualizar libro
@@ -95,7 +97,7 @@ public class BookService {
 
         updateBook(book, postBookDTO);
         book = bookRepository.save(book);
-        return toDTO(book);
+        return new BookDTO(book);
     }
 
     // eliminar libro
@@ -113,41 +115,41 @@ public class BookService {
 
     // ----- metodos de mappeo -----
     // Book a BookDTO
-    public BookDTO toDTO(Book book) {
-        BookDTO bookDTO = new BookDTO();
-        bookDTO.setIsbn(book.getIsbn());
-        bookDTO.setTitle(book.getTitle());
-        bookDTO.setAuthorName(book.getAuthor().getName() +  " " + book.getAuthor().getLastName());
-        bookDTO.setCategory(book.getCategory().getName());
-        bookDTO.setPublisher(book.getPublisher());
-        bookDTO.setTotalCopies(book.getTotalCopies());
-        bookDTO.setAvailableCopies(book.getAvailableCopies());
-        bookDTO.setPublishedDate(book.getPublishedDate());
-        return bookDTO;
-    }
+//    public BookDTO toDTO(Book book) {
+//        BookDTO bookDTO = new BookDTO();
+//        bookDTO.setIsbn(book.getIsbn());
+//        bookDTO.setTitle(book.getTitle());
+//        bookDTO.setAuthorName(book.getAuthor().getName() +  " " + book.getAuthor().getLastName());
+//        bookDTO.setCategory(book.getCategory().getName());
+//        bookDTO.setPublisher(book.getPublisher());
+//        bookDTO.setTotalCopies(book.getTotalCopies());
+//        bookDTO.setAvailableCopies(book.getAvailableCopies());
+//        bookDTO.setPublishedDate(book.getPublishedDate());
+//        return bookDTO;
+//    }
 
     // List<Book> a List<BookDTO>
     public List<BookDTO> toDTOList(List<Book> books) {
         List<BookDTO> bookDTOList = new ArrayList<>();
         for (Book book : books) {
-            bookDTOList.add(toDTO(book));
+            bookDTOList.add(new BookDTO(book));
         }
         return bookDTOList;
     }
 
     // PostBookDTO a Book
-    public Book toEntity(PostBookDTO postBookDTO, Author author, Category category) {
-        Book book = new Book();
-        book.setIsbn(postBookDTO.getIsbn());
-        book.setTitle(postBookDTO.getTitle());
-        book.setPublishedDate(postBookDTO.getPublishedDate());
-        book.setPublisher(postBookDTO.getPublisher());
-        book.setAvailableCopies(postBookDTO.getAvailableCopies());
-        book.setTotalCopies(postBookDTO.getTotalCopies());
-        book.setCategory(category);
-        book.setAuthor(author);
-        return book;
-    }
+//    public Book toEntity(PostBookDTO postBookDTO, Author author, Category category) {
+//        Book book = new Book();
+//        book.setIsbn(postBookDTO.getIsbn());
+//        book.setTitle(postBookDTO.getTitle());
+//        book.setPublishedDate(postBookDTO.getPublishedDate());
+//        book.setPublisher(postBookDTO.getPublisher());
+//        book.setAvailableCopies(postBookDTO.getAvailableCopies());
+//        book.setTotalCopies(postBookDTO.getTotalCopies());
+//        book.setCategory(category);
+//        book.setAuthor(author);
+//        return book;
+//    }
 
     // actualizar libro
     public void updateBook(Book book, PostBookDTO postBookDTO) {

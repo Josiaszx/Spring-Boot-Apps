@@ -1,5 +1,6 @@
 package com.empresa.biblioteca.model;
 
+import com.empresa.biblioteca.dto.CategoryDTO;
 import jakarta.persistence.*;
 
 @Entity
@@ -20,6 +21,11 @@ public class Category {
         this.id = id;
         this.name = name;
         this.description = description;
+    }
+
+    public Category(CategoryDTO categoryDTO) {
+        this.name = categoryDTO.getName();
+        this.description = categoryDTO.getDescription();
     }
 
     public Category() {}

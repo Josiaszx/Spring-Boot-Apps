@@ -3,6 +3,9 @@ package com.empresa.biblioteca.controller;
 import com.empresa.biblioteca.dto.LoanDTO;
 import com.empresa.biblioteca.dto.PostLoanDTO;
 import com.empresa.biblioteca.service.LoanService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,8 +33,13 @@ public class LoanController {
 
     // GET /api/loans/active - Préstamos activos
     @GetMapping("/active")
-    public List<LoanDTO> findAllActive() {
-        return loanService.findAllActive();
+    public Page<LoanDTO> findAllActive(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        return loanService.findAllActive(pageable);
+//        return loanService.findAllActive();
     }
 
     // GET /api/loans/overdue - Prestamos vencidos

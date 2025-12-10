@@ -1,5 +1,7 @@
 package com.empresa.biblioteca.model;
 
+import com.empresa.biblioteca.dto.BookDTO;
+import com.empresa.biblioteca.dto.PostBookDTO;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -48,6 +50,28 @@ public class Book {
         this.publishedDate = publishedDate;
         this.availableCopies = availableCopies;
         this.totalCopies = totalCopies;
+        this.author = author;
+        this.category = category;
+    }
+
+    public Book(BookDTO bookDTO, Author author, Category category) {
+        this.isbn = bookDTO.getIsbn();
+        this.title = bookDTO.getTitle();
+        this.publisher = bookDTO.getPublisher();
+        this.publishedDate = bookDTO.getPublishedDate();
+        this.availableCopies = bookDTO.getAvailableCopies();
+        this.totalCopies = bookDTO.getTotalCopies();
+        this.author = author;
+        this.category = category;
+    }
+
+    public Book(PostBookDTO PostBookDTO, Author author, Category category) {
+        this.isbn = PostBookDTO.getIsbn();
+        this.title = PostBookDTO.getTitle();
+        this.publisher = PostBookDTO.getPublisher();
+        this.publishedDate = PostBookDTO.getPublishedDate();
+        this.availableCopies = PostBookDTO.getAvailableCopies();
+        this.totalCopies = PostBookDTO.getTotalCopies();
         this.author = author;
         this.category = category;
     }
