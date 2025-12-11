@@ -56,8 +56,10 @@ src/main/java/com/biblioteca/
 │   ├── PostBookDTO.java            # para @RequestBody de POST requests
 │   └── PostLoanDTO.java            # para @RequestBody de POST requests
 │
-└── exception/
-    ├── ResourceNotFoundException.java
+├── exception/
+│   └── InvalidOperationException.java
+│
+└── hadler/
     └── GlobalExceptionHandler.java
 ```
 

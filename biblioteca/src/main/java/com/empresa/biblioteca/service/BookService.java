@@ -1,12 +1,9 @@
 package com.empresa.biblioteca.service;
 
-import com.empresa.biblioteca.dto.AuthorDTO;
 import com.empresa.biblioteca.dto.BookDTO;
-import com.empresa.biblioteca.dto.CategoryDTO;
-import com.empresa.biblioteca.model.Author;
 import com.empresa.biblioteca.model.Book;
 import com.empresa.biblioteca.dto.PostBookDTO;
-import com.empresa.biblioteca.model.Category;
+import com.empresa.biblioteca.model.Member;
 import com.empresa.biblioteca.repository.AuthorRepository;
 import com.empresa.biblioteca.repository.BookRepository;
 import com.empresa.biblioteca.repository.CategoryRepository;
@@ -15,10 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class BookService {
@@ -63,7 +57,7 @@ public class BookService {
     // buscar libro por titulo
     public BookDTO findByTitle(String title) {
         var book = bookRepository.findByTitle(title);
-        if  (book == null) return new BookDTO();
+        if  (book == null) throw new NoSuchElementException("Book not found");
         return new BookDTO(book);
     }
 
@@ -77,10 +71,10 @@ public class BookService {
     // agregar libro
     public BookDTO save(PostBookDTO postBookDTO) {
         var category = categoryRepository.findById(postBookDTO.getCategoryId())
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new NoSuchElementException("Category not found"));
 
         var author = authorRepository.findById(postBookDTO.getAuthorId())
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new NoSuchElementException("Author not found"));
 
         var book = new Book(postBookDTO,  author, category);
         book =  bookRepository.save(book);
@@ -90,10 +84,7 @@ public class BookService {
     // actualizar libro
     public BookDTO update(PostBookDTO postBookDTO, Long id) {
         var book = bookRepository.findById(id)
-                .orElseThrow(IllegalArgumentException::new);
-
-        var author = book.getAuthor();
-        var category = book.getCategory();
+                .orElseThrow(() -> new NoSuchElementException("Book not found"));
 
         updateBook(book, postBookDTO);
         book = bookRepository.save(book);
@@ -102,6 +93,9 @@ public class BookService {
 
     // eliminar libro
     public void delete(Long id) {
+        boolean existsElement = bookRepository.existsById(id);
+        if (!existsElement)  throw new NoSuchElementException("Book not found");
+
         bookRepository.deleteById(id);
     }
 
@@ -112,10 +106,14 @@ public class BookService {
 
         // libro mas prestado
         var mostBorrowedBooks = loanRepository.findMostBorrowedBook();
+        if (mostBorrowedBooks == null) mostBorrowedBooks = new Book();
+
         stats.put("Libro mas prestado", mostBorrowedBooks.getTitle());
 
         // miembro con mas prestamos activos
         var memberWithMostLoans = loanRepository.findMemberWithMostLoans();
+        if (memberWithMostLoans == null) memberWithMostLoans = new Member();
+
         stats.put("Miembro con mas prestamos activos",
                         memberWithMostLoans.getFirstName() +
                         " " +
@@ -148,12 +146,15 @@ public class BookService {
 
         if (postBookDTO.getCategoryId() != null) {
             var category = categoryRepository.findById(postBookDTO.getCategoryId())
-                    .orElseThrow(IllegalArgumentException::new);
+                    .orElseThrow(() -> new NoSuchElementException("Category not found"));
+
             book.setCategory(category);
         }
+
         if  (postBookDTO.getAuthorId() != null) {
             var author = authorRepository.findById(postBookDTO.getAuthorId())
-                    .orElseThrow(IllegalArgumentException::new);
+                    .orElseThrow(()  -> new NoSuchElementException("Author not found"));
+
             book.setAuthor(author);
         }
     }

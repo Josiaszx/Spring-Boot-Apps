@@ -3,6 +3,7 @@ package com.empresa.biblioteca.controller;
 import com.empresa.biblioteca.dto.BookDTO;
 import com.empresa.biblioteca.dto.PostBookDTO;
 import com.empresa.biblioteca.service.BookService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
@@ -78,7 +79,7 @@ public class BookController {
 
     // 7 - POST /api/books - Crear nuevo libro
     @PostMapping
-    public BookDTO save(@RequestBody PostBookDTO postBookDTO) {
+    public BookDTO save(@Valid @RequestBody PostBookDTO postBookDTO) {
         return bookService.save(postBookDTO);
     }
 

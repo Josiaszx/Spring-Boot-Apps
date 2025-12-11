@@ -1,25 +1,41 @@
 package com.empresa.biblioteca.dto;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 import java.time.LocalDate;
 
 // clase para agregar un nuevo libro
 // a diferencia de BookDTO, espera el id del autor y de la categoria del libro
 public class PostBookDTO {
 
+    @NotNull(message = "isbn cannot be null")
+    @NotEmpty(message = "isbn cannot be empty")
     private String isbn;
 
+    @NotNull(message = "title cannot be null")
+    @NotEmpty(message = "title cannot be empty")
     private String title;
 
+    @NotNull(message = "publisher cannot be null")
+    @NotEmpty(message = "publisher cannot be empty")
     private String publisher;
 
+    @NotNull(message = "published date cannot be null")
     private LocalDate publishedDate;
 
-    private Integer availableCopies;
-
+    @NotNull(message = "total copies cannot be null")
     private Integer totalCopies;
 
+    @NotNull(message = "available copies cannot be null")
+    @Size(message = "available copies cannot be less than 0")
+    private Integer availableCopies;
+
+    @NotNull(message = "author id cannot be null")
     Long authorId;
 
+    @NotNull(message = "category id cannot be null")
     Long categoryId;
 
     public PostBookDTO(String isbn, String title, String publisher, LocalDate publishedDate, Integer availableCopies, Integer totalCopies, Long authorId, Long categoryId) {
@@ -32,8 +48,6 @@ public class PostBookDTO {
         this.authorId = authorId;
         this.categoryId = categoryId;
     }
-
-    public PostBookDTO() {}
 
     public String getIsbn() {
         return isbn;

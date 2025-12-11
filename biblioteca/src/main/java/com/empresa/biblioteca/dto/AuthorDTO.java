@@ -1,22 +1,37 @@
 package com.empresa.biblioteca.dto;
 
 import com.empresa.biblioteca.model.Author;
+import jakarta.validation.constraints.*;
+import org.aspectj.lang.annotation.Before;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 public class AuthorDTO {
 
+    @NotNull(message = "name cannot be null")
+    @NotEmpty(message = "name cannot be empty")
+    @Size(max = 30, message = "name cannot be larger than 30 characters")
     private String name;
 
+    @NotNull(message = "lastName cannot be null")
+    @NotEmpty(message = "lastName cannot be empty")
+    @Size(max = 30, message = "lastName cannot be larger than 30 characters")
     private String lastName;
 
+    @Email(message = "invalid email")
     private String email;
 
+    @NotNull(message = "nationality cannot be null")
+    @NotEmpty(message = "nationality cannot be empty")
+    @Size(max = 30, message = "nationality cannot be larger than 30 characters")
     private String nationality;
 
+    @NotNull(message = "birthDate cannot be null")
     private LocalDate birthDate;
 
+    @NotNull(message = "biography cannot be null")
+    @NotEmpty(message = "biography cannot be empty")
+    @Size(max = 255, message = "biography cannot be larger than 255 characters")
     private String biography;
 
     public AuthorDTO(String name, String lastName, String email, String nationality, LocalDate birthDate, String biography) {

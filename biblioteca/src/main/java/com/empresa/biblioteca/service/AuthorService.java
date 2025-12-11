@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class AuthorService {
@@ -37,13 +38,17 @@ public class AuthorService {
 
     // mostrar autor por id
     public AuthorDTO findById(Long id) {
-        Author author = authorRepository.findById(id).orElse(new Author());
+        Author author = authorRepository.findById(id)
+                .orElseThrow(() ->  new NoSuchElementException("Author Not Found"));
+
         return new AuthorDTO(author);
     }
 
-    // mostrar libros de una autor
+    // mostrar libros de un autor
     public List<BookDTO>  findBooksByAuthorId(Long authorId) {
-        var author = authorRepository.findById(authorId).orElseThrow(IllegalArgumentException::new);
+        var author = authorRepository.findById(authorId)
+                .orElseThrow(() ->  new NoSuchElementException("Author Not Found"));
+
         var books = bookRepository.findAllByAuthorIs(author);
         return bookService.toDTOList(books);
     }
@@ -56,17 +61,17 @@ public class AuthorService {
     }
 
     // actualizar actor
-    public AuthorDTO modifyAuthor(Long authorId, AuthorDTO authorDTO) {
-        Author author = authorRepository.findById(authorId).orElseThrow(IllegalArgumentException::new);
-        author = updateAuthor(authorId, authorDTO);
+    public AuthorDTO modifyAuthor(Long authorId, Author UpdatedAuthor) {
+        Author author = updateAuthor(authorId, UpdatedAuthor);
         author = authorRepository.save(author);
         return new AuthorDTO(author);
     }
 
     // eliminar autor segun id
     public void deleteById(Long id) {
-        Author author = authorRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-        authorRepository.deleteById(author.getId());
+        boolean existsAuthor = authorRepository.existsAuthorByIdIs(id);
+        if (!existsAuthor) throw new NoSuchElementException("Author Not Found");
+        authorRepository.deleteById(id);
     }
 
 
@@ -81,16 +86,17 @@ public class AuthorService {
         return authorDTOs;
     }
 
-    // metodo para actualizar un Author a partir de un AuthorDTO con posible valores null
-    public Author updateAuthor(Long authorId, AuthorDTO authorDTO) {
-        Author author = authorRepository.findById(authorId).orElseThrow(IllegalArgumentException::new);
+    // metodo para actualizar un Author con los campos no nulos de otro dado
+    public Author updateAuthor(Long authorId, Author updatedAuthor) {
+        Author author = authorRepository.findById(authorId)
+                .orElseThrow(() ->  new NoSuchElementException("Author Not Found"));
 
-        if (authorDTO.getName() != null) author.setName(authorDTO.getName());
-        if (authorDTO.getLastName() != null) author.setLastName(authorDTO.getLastName());
-        if (authorDTO.getBiography() != null) author.setBiography(authorDTO.getBiography());
-        if (authorDTO.getEmail() != null) author.setEmail(authorDTO.getEmail());
-        if (authorDTO.getNationality() != null) author.setNationality(authorDTO.getNationality());
-        if (authorDTO.getBirthDate() != null) author.setBirthDate(authorDTO.getBirthDate());
+        if (updatedAuthor.getName() != null) author.setName(updatedAuthor.getName());
+        if (updatedAuthor.getLastName() != null) author.setLastName(updatedAuthor.getLastName());
+        if (updatedAuthor.getBiography() != null) author.setBiography(updatedAuthor.getBiography());
+        if (updatedAuthor.getEmail() != null) author.setEmail(updatedAuthor.getEmail());
+        if (updatedAuthor.getNationality() != null) author.setNationality(updatedAuthor.getNationality());
+        if (updatedAuthor.getBirthDate() != null) author.setBirthDate(updatedAuthor.getBirthDate());
 
         return author;
     }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class MemberService {
@@ -44,17 +45,23 @@ public class MemberService {
 
     // mostrar miembro por id
     public MemberDTO findById(Long id) {
-        Member member = memberRepository.findById(id).orElse(new Member());
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Member Not found"));
+
         return new MemberDTO(member);
     }
 
     // eliminar miembro
     public void delete(Long id) {
+        if (!memberRepository.findById(id).isPresent()) throw new NoSuchElementException("Member Not found");
+
         memberRepository.deleteById(id);
     }
 
     // modificar miembro
     public MemberDTO update(MemberDTO memberDTO, Long id) {
+        if (!memberRepository.findById(id).isPresent()) throw new NoSuchElementException("Member Not found");
+
         Member member = updateMember(memberDTO, id);
         member = memberRepository.save(member);
         return new MemberDTO(member);
@@ -62,7 +69,9 @@ public class MemberService {
 
     // mostrar prestamos de un miembro
     public List<LoanDTO> findAllMemberLoans(Long idUser) {
-        var member = memberRepository.findById(idUser).orElseThrow(IllegalStateException::new);
+        var member = memberRepository.findById(idUser)
+                .orElseThrow(() -> new NoSuchElementException("Member Not found"));
+
         var memberLoans = loanRepository.findAllByMemberIs(member);
         return loanService.toDTOList(memberLoans);
     }
@@ -81,7 +90,9 @@ public class MemberService {
 
     // actualizar miembro
     public Member updateMember(MemberDTO memberDTO, Long memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(IllegalArgumentException::new);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new NoSuchElementException("Member Not found"));
+
         if (memberDTO.getFirstName() != null) member.setFirstName(memberDTO.getFirstName());
         if (memberDTO.getLastName() != null) member.setLastName(memberDTO.getLastName());
         if (memberDTO.getEmail() != null) member.setEmail(memberDTO.getEmail());

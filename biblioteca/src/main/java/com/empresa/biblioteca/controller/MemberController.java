@@ -4,6 +4,7 @@ import com.empresa.biblioteca.dto.LoanDTO;
 import com.empresa.biblioteca.dto.MemberDTO;
 import com.empresa.biblioteca.model.Member;
 import com.empresa.biblioteca.service.MemberService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +34,7 @@ public class MemberController {
 
     // 1 - POST api/members/ ... agregar meimbro
     @PostMapping
-    public MemberDTO save(@RequestBody MemberDTO memberDTO) {
+    public MemberDTO save(@Valid @RequestBody MemberDTO memberDTO) {
         return memberService.save(memberDTO);
     }
 

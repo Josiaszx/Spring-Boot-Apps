@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class CategoryService {
@@ -33,13 +34,17 @@ public class CategoryService {
 
     // obtener categoria por id
     public CategoryDTO findById(Long id) {
-        Category category = categoryRepository.findById(id).orElseThrow(IllegalAccessError::new);
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Category not found"));
+
         return new CategoryDTO(category);
     }
 
     // actualizar categoria
     public Category update(CategoryDTO categoryDTO, Long id) {
-        Category category = categoryRepository.findById(id).orElseThrow(IllegalAccessError::new);
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Category not found"));
+
         if (categoryDTO.getName() != null) category.setName(categoryDTO.getName());
         if (categoryDTO.getDescription() != null) category.setDescription(categoryDTO.getDescription());
         return categoryRepository.save(category);
@@ -47,6 +52,7 @@ public class CategoryService {
 
     // eliminar categoria
     public void delete(Long id) {
+        if (!categoryRepository.findById(id).isPresent()) throw new NoSuchElementException("Category not found");
         categoryRepository.deleteById(id);
     }
 

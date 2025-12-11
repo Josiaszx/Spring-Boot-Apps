@@ -2,7 +2,7 @@ package com.empresa.biblioteca.service;
 
 import com.empresa.biblioteca.dto.LoanDTO;
 import com.empresa.biblioteca.dto.PostLoanDTO;
-import com.empresa.biblioteca.model.Book;
+import com.empresa.biblioteca.exception.InvalidOperationException;
 import com.empresa.biblioteca.model.Loan;
 import com.empresa.biblioteca.model.LoanStatus;
 import com.empresa.biblioteca.model.Member;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class LoanService {
@@ -37,13 +38,14 @@ public class LoanService {
     public LoanDTO save(PostLoanDTO postLoanDTO) {
 
         var book = bookRepository.findById(postLoanDTO.getBookId())
-                        .orElseThrow(IllegalArgumentException::new);
+                        .orElseThrow(() -> new NoSuchElementException("Book not found"));
+
         var member = memberRepository.findById(postLoanDTO.getMemberId())
-                        .orElseThrow(IllegalArgumentException::new);
+                        .orElseThrow(() -> new NoSuchElementException("Member not found"));
 
         Loan loan = new Loan(postLoanDTO, member, book);
 
-        if (book.getAvailableCopies() == 0) return null;
+        if (book.getAvailableCopies() == 0) throw new InvalidOperationException("Book not available");
         book.setAvailableCopies(book.getAvailableCopies() - 1);
 
         bookRepository.save(book);
@@ -53,8 +55,10 @@ public class LoanService {
 
     // devolver libro
     public LoanDTO returnBook(Long loanId) {
-        var loan = loanRepository.findById(loanId).orElseThrow(IllegalStateException::new);
-        if (loan.getStatus() == LoanStatus.CLOSED) return null;
+        var loan = loanRepository.findById(loanId)
+                .orElseThrow(() -> new NoSuchElementException("Loan not found"));
+
+        if (loan.getStatus() == LoanStatus.CLOSED) throw new InvalidOperationException("Loan already closed");
 
         var book = loan.getBook();
         book.setAvailableCopies(book.getAvailableCopies() + 1);
@@ -79,13 +83,17 @@ public class LoanService {
 
     // mostrar prestamo segun id
     public LoanDTO findById(long id) {
-        var loan = loanRepository.findById(id).orElseThrow(IllegalStateException::new);
+        var loan = loanRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Loan not found"));
+
         return new LoanDTO(loan);
     }
 
     // listar todos los prestamos de un miembro
     public List<LoanDTO> findAllLoansFromOneUser(Long userId) {
-        Member member = memberRepository.findById(userId).orElseThrow(IllegalStateException::new);
+        Member member = memberRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("Member not found"));
+
         return toDTOList(loanRepository.findAllByMemberIs(member));
     }
 
