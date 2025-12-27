@@ -1,19 +1,25 @@
 package com.empresa.biblioteca.dto;
 
 import com.empresa.biblioteca.model.LoanStatus;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
 public class PostLoanDTO {
 
+    @NotNull(message = "book id cannot be null")
     private Long bookId;
 
+    @NotNull(message = "member id cannot be null")
     private Long memberId;
 
+    @NotNull(message = "loan date cannot be empty")
     private LocalDate loanDate;
 
+    @NotNull(message = "due date cannot be empty")
     private LocalDate dueDate;
 
+    @NotNull(message = "return date cannot be empty")
     private LocalDate returnDate;
 
     private LoanStatus status;
@@ -24,7 +30,7 @@ public class PostLoanDTO {
         this.loanDate = loanDate == null ? LocalDate.now() : loanDate;
         this.dueDate = dueDate;
         this.returnDate = returnDate;
-        this.status = status;
+        this.status = status == null ? LoanStatus.ACTIVE : status;
     }
 
     public PostLoanDTO() {}

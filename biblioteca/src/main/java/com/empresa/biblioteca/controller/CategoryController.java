@@ -3,6 +3,7 @@ package com.empresa.biblioteca.controller;
 import com.empresa.biblioteca.dto.CategoryDTO;
 import com.empresa.biblioteca.model.Category;
 import com.empresa.biblioteca.service.CategoryService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +37,7 @@ public class CategoryController {
 
     // 2 - POST /api/categories ... agregar categoria
     @PostMapping
-    public Category save(@RequestBody CategoryDTO categoryDTO) {
+    public Category save(@Valid @RequestBody CategoryDTO categoryDTO) {
         return categoryService.save(categoryDTO);
     }
 

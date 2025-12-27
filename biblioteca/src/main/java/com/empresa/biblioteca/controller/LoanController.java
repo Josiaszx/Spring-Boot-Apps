@@ -3,6 +3,7 @@ package com.empresa.biblioteca.controller;
 import com.empresa.biblioteca.dto.LoanDTO;
 import com.empresa.biblioteca.dto.PostLoanDTO;
 import com.empresa.biblioteca.service.LoanService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +31,7 @@ public class LoanController {
 
     // 1 - POST /api/loans ... Registrar préstamo
     @PostMapping
-    public LoanDTO save(@RequestBody PostLoanDTO postLoanDTO) {
+    public LoanDTO save(@Valid @RequestBody PostLoanDTO postLoanDTO) {
         return loanService.save(postLoanDTO);
     }
 

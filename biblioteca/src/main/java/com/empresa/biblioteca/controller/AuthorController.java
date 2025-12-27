@@ -2,7 +2,9 @@ package com.empresa.biblioteca.controller;
 
 import com.empresa.biblioteca.dto.AuthorDTO;
 import com.empresa.biblioteca.dto.BookDTO;
+import com.empresa.biblioteca.model.Author;
 import com.empresa.biblioteca.service.AuthorService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
@@ -52,14 +54,14 @@ public class AuthorController {
 
     // 4 - POST /api/authors ... Crear autor
     @PostMapping
-    public AuthorDTO save(@RequestBody AuthorDTO authorDTO) {
+    public AuthorDTO save(@Valid @RequestBody AuthorDTO authorDTO) {
         return authorService.save(authorDTO);
     }
 
     // 5 - PUT /api/authors/{id} ... Actualizar
     @PutMapping("/{id}")
-    public AuthorDTO modifyAuthor(@PathVariable Long id, @RequestBody AuthorDTO authorDTO) {
-        return  authorService.modifyAuthor(id, authorDTO);
+    public AuthorDTO modifyAuthor(@PathVariable Long id, @RequestBody Author author) {
+        return  authorService.modifyAuthor(id, author);
     }
 
     // 6 - DELETE /api/authors/{id} ... Eliminar
