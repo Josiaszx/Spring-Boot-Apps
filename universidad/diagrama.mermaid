@@ -1,0 +1,81 @@
+erDiagram
+    ESTUDIANTE ||--o{ MATRICULA : "se matricula en"
+    CURSO ||--o{ MATRICULA : "tiene matriculados"
+    PROFESOR ||--o{ CURSO : imparte
+    DEPARTAMENTO ||--o{ PROFESOR : "tiene asignado"
+    ESTUDIANTE ||--|| PERFIL_ACADEMICO : tiene
+    CURSO }o--o{ ASIGNATURA : "requiere como prerequisito"
+
+    ESTUDIANTE {
+        Long id PK
+        String nombre
+        String apellido
+        String codigo UK
+        String email UK
+        LocalDate fechaIngreso
+        String carrera
+        Long perfilAcademicoId FK
+    }
+
+    PERFIL_ACADEMICO {
+        Long id PK
+        Double promedioGeneral
+        Integer creditosCompletados
+        String nivelAcademico
+        String estadoAcademico
+        LocalDate fechaActualizacion
+    }
+
+    PROFESOR {
+        Long id PK
+        String nombre
+        String apellido
+        String codigo UK
+        String email UK
+        String especialidad
+        LocalDate fechaContratacion
+        Long departamentoId FK
+    }
+
+    DEPARTAMENTO {
+        Long id PK
+        String nombre UK
+        String codigo UK
+        String edificio
+        String telefono
+        String emailContacto
+    }
+
+    CURSO {
+        Long id PK
+        String nombre
+        String codigo UK
+        Integer creditos
+        String horario
+        Integer cupoMaximo
+        Integer cupoActual
+        String semestre
+        Long profesorId FK
+    }
+
+    ASIGNATURA {
+        Long id PK
+        String nombre UK
+        String descripcion
+        Integer creditosRequeridos
+    }
+
+    MATRICULA {
+        Long id PK
+        LocalDate fechaMatricula
+        Double notaFinal
+        String estado
+        Integer asistencias
+        Long estudianteId FK
+        Long cursoId FK
+    }
+
+    CURSO_ASIGNATURA {
+        Long cursoId FK
+        Long asignaturaId FK
+    }
