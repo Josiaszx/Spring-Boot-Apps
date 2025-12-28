@@ -41,4 +41,12 @@ public class Curso {
 
     @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Matricula> matriculas;
+
+    @ManyToMany
+    @JoinTable(
+            name = "curso_asignatura",
+            joinColumns = @JoinColumn(name = "curso_id"),
+            inverseJoinColumns = @JoinColumn(name = "asignatura_id")
+    )
+    private List<Asignatura> prerequisitos;
 }

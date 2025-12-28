@@ -8,7 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class CursoDTO {
-    private Long id;
     private String nombre;
     private String codigo;
     private String descripcion;
@@ -20,7 +19,6 @@ public class CursoDTO {
     private String nombreProfesor;
 
     public CursoDTO(Curso curso) {
-        this.id = curso.getId();
         this.nombre = curso.getNombre();
         this.codigo = curso.getCodigo();
         this.descripcion = curso.getDescripcion();

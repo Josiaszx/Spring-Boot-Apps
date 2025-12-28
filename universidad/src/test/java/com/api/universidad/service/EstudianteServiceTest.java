@@ -8,7 +8,7 @@ import com.api.universidad.model.EstadoAcademico;
 import com.api.universidad.model.Estudiante;
 import com.api.universidad.model.NivelAcademico;
 import com.api.universidad.model.PerfilAcademico;
-import com.api.universidad.repository.EstudianteRespository;
+import com.api.universidad.repository.EstudianteRepository;
 import com.api.universidad.repository.PerfilAcademicoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,7 +33,7 @@ import static org.mockito.Mockito.*;
 class EstudianteServiceTest {
 
     @Mock
-    private EstudianteRespository estudianteRespository;
+    private EstudianteRepository estudianteRespository;
 
     @Mock
     private PerfilAcademicoRepository perfilAcademicoRepository;

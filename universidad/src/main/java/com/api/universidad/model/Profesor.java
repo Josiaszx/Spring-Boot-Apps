@@ -1,6 +1,7 @@
 package com.api.universidad.model;
 
 import com.api.universidad.dto.ProfesorDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
@@ -37,6 +38,7 @@ public class Profesor {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "departamento_id")
+    @JsonIgnore
     private Departamento departamento;
 
     @OneToMany(mappedBy = "profesor", cascade = CascadeType.ALL)

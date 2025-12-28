@@ -6,7 +6,7 @@ import com.api.universidad.dto.PostEstudianteDTO;
 import com.api.universidad.exception.ResourceNotFoundException;
 import com.api.universidad.model.Estudiante;
 import com.api.universidad.model.PerfilAcademico;
-import com.api.universidad.repository.EstudianteRespository;
+import com.api.universidad.repository.EstudianteRepository;
 import com.api.universidad.repository.PerfilAcademicoRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,10 +18,10 @@ import java.time.LocalDate;
 @Service
 public class EstudianteService {
 
-    private final EstudianteRespository estudianteRespository;
+    private final EstudianteRepository estudianteRespository;
     private final PerfilAcademicoRepository perfilAcademicoRepository;
 
-    public EstudianteService(EstudianteRespository estudianteRespository,
+    public EstudianteService(EstudianteRepository estudianteRespository,
                              PerfilAcademicoRepository perfilAcademicoRepository
     ) {
         this.estudianteRespository = estudianteRespository;

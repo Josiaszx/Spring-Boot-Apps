@@ -5,3 +5,10 @@ Crear una API REST para gestionar una biblioteca que permita administrar libros,
 1. [Codigo](biblioteca/src/main/java/com/empresa/biblioteca)
 2. [Requerimientos](biblioteca/BIBLIOTECA.md)
 3. [Diagrama ER](biblioteca/DIAGRAMA.png)
+
+## Aplicacion de universidad
+API REST para gestionar una universidad que incluye estudiantes, profesores, cursos, departamentos y matrículas.
+
+1. [Codigo](universidad/src/main/java/com/api/universidad)
+2. [Requerimientos](universidad/UNIVERSIDAD.md)
+3. [Diagrama ER](universidad/DIAGRAMA.png)

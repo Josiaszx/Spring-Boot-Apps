@@ -9,7 +9,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class ProfesorDTO {
-    private Long id;
     private String nombre;
     private String apellido;
     private String codigo;
@@ -19,7 +18,6 @@ public class ProfesorDTO {
     private String nombreDepartamento;
 
     public ProfesorDTO(Profesor profesor) {
-        this.id = profesor.getId();
         this.nombre = profesor.getNombre();
         this.apellido = profesor.getApellido();
         this.codigo = profesor.getCodigo();
