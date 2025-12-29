@@ -12,3 +12,10 @@ API REST para gestionar una universidad que incluye estudiantes, profesores, cur
 1. [Codigo](universidad/src/main/java/com/api/universidad)
 2. [Requerimientos](universidad/UNIVERSIDAD.md)
 3. [Diagrama ER](universidad/DIAGRAMA.png)
+
+## Aplicacion de supermercado
+Crear una API REST para gestionar un supermercado que permita administrar productos, sucursales y ventas.
+
+1. [Codigo](supermercado/src/main/java/com/app/supermercado)
+2. [Requerimientos](supermercado/SUPERMERCADO.md)
+3. [Diagrama ER](supermercado/DIAGRAMA.png)
