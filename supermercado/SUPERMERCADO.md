@@ -1,11 +1,10 @@
 # API REST para la gestión de ventas en una cadena de supermercados
 
-## 🎯 Objetivo  
+## 🎯 Objetivo
 El objetivo de esta prueba es evaluar conocimientos en **Java + Spring Boot**, incluyendo el desarrollo de una **API RESTful** completa que implemente operaciones CRUD con JPA, relaciones entre entidades, control de errores y excepciones, uso de DTOs, buenas prácticas REST y programación funcional (uso de lambdas y streams) donde aplique.
 
----
 
-## 📘 Descripción del caso  
+## 📘 Descripción del caso
 Una reconocida cadena de supermercados desea digitalizar su sistema de control de ventas. Para ello necesita una API que permita (de forma básica):
 - Registrar productos con sus respectivos precios.
 - Gestionar las sucursales donde se venden los productos.
@@ -13,7 +12,6 @@ Una reconocida cadena de supermercados desea digitalizar su sistema de control d
 
 La empresa desea consultar luego las ventas por sucursal, totalizar ingresos, filtrar productos más vendidos, etc.
 
----
 
 ## 📚 Entidades principales
 - **Sucursal**: representa una ubicación física del supermercado (una por cada ubicación).
@@ -25,7 +23,6 @@ La empresa desea consultar luego las ventas por sucursal, totalizar ingresos, fi
 - Una **Venta** tiene muchos productos asociados.
 - Un mismo **Producto** puede estar en muchas ventas.
 
---- 
 
 ## ✅ Requisitos técnicos
 - Utilizar **Spring Boot con JPA** para manejo de bases de datos.
@@ -36,27 +33,28 @@ La empresa desea consultar luego las ventas por sucursal, totalizar ingresos, fi
 - Uso de **lambdas o streams** en al menos una **operación del backend.**
 - Organización modular del proyecto (service, repository, controller).
 
+
 ## 📃 Historias de usuario (Requerimientos funcionales)
 
 ### Productos
 
-#### 1. Obtener listado de productos  
-- **Método**: `GET`  
-- **Path**: `/api/productos`  
+#### 1. Obtener listado de productos
+- **Método**: `GET`
+- **Path**: `/api/productos`
 - **Descripción**: Listar todos los productos registrados.
 
-#### 2. Registrar nuevo producto  
-- **Método**: `POST`  
-- **Path**: `/api/productos`  
+#### 2. Registrar nuevo producto
+- **Método**: `POST`
+- **Path**: `/api/productos`
 - **Descripción**: Crear un nuevo producto con nombre, precio y categoría.
 
-#### 3. Actualizar producto existente  
-- **Método**: `PUT`  
-- **Path**: `/api/productos/{id}`  
+#### 3. Actualizar producto existente
+- **Método**: `PUT`
+- **Path**: `/api/productos/{id}`
 - **Descripción**: Modificar los datos de un producto específico.
 
-#### 4. Eliminar un producto  
-- **Método**: `DELETE`  
+#### 4. Eliminar un producto
+- **Método**: `DELETE`
 - **Path**: `/api/productos/{id}`
 - **Descripción**: Eliminar un producto del sistema.
 
@@ -111,7 +109,6 @@ La empresa desea consultar luego las ventas por sucursal, totalizar ingresos, fi
 
 Las ventas NO SE PUEDEN MODIFICAR sin permiso de superusuario (no es necesario implementar esto).
 
----
 
 ## Extra - Estadísticas (opcional no obligatorio)
 1. **Obtener producto más vendido**
