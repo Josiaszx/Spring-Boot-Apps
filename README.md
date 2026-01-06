@@ -19,3 +19,10 @@ Crear una API REST para gestionar un supermercado que permita administrar produc
 1. [Codigo](supermercado/src/main/java/com/app/supermercado)
 2. [Requerimientos](supermercado/SUPERMERCADO.md)
 3. [Diagrama ER](supermercado/DIAGRAMA.png)
+
+## Aplicacion para veterinaria
+Desarrollar una API REST para una clínica veterinaria que permita gestionar mascotas, dueños, veterinarios, citas médicas e historiales clínicos. El sistema debe implementar autenticación y autorización con diferentes roles de usuario.
+
+1. [Codigo](veterinaria/src/main/java/com/app/veterinaria)
+2. [Requerimientos](veterinaria/VETERINARIA.md)
+3. [Diagrama ER](veterinaria/DIAGRAMA.png)

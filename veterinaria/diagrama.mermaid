@@ -1,0 +1,76 @@
+erDiagram
+    USER ||--o{ VETERINARIAN : "es_un"
+    USER || --o{ ROLES : "tiene"
+    USER ||--o{ OWNER : "es_un"
+    OWNER ||--o{ PET : "tiene"
+    PET ||--o{ APPOINTMENT : "participa_en"
+    VETERINARIAN ||--o{ APPOINTMENT : "atiende"
+    PET ||--o{ MEDICAL_RECORD : "tiene"
+    VETERINARIAN ||--o{ MEDICAL_RECORD : "crea"
+    APPOINTMENT ||--|| MEDICAL_RECORD : "genera"
+
+    USER {
+        Long id PK
+        String username UK
+        String password
+        String email UK
+        String role
+        Boolean active
+        LocalDateTime createdAt
+    }
+
+    ROLES {
+        Long id PK
+        String role UK
+    }
+
+    OWNER {
+        Long id PK
+        Long userId FK
+        String firstName
+        String lastName
+        String phone
+        String address
+    }
+
+    VETERINARIAN {
+        Long id PK
+        Long userId FK
+        String firstName
+        String lastName
+        String specialty
+        String licenseNumber UK
+    }
+
+    PET {
+        Long id PK
+        Long ownerId FK
+        String name
+        String species
+        String breed
+        LocalDate birthDate
+        String gender
+        Double weight
+    }
+
+    APPOINTMENT {
+        Long id PK
+        Long petId FK
+        Long veterinarianId FK
+        LocalDateTime appointmentDate
+        String status
+        String reason
+        String notes
+    }
+
+    MEDICAL_RECORD {
+        Long id PK
+        Long petId FK
+        Long veterinarianId FK
+        Long appointmentId FK
+        LocalDateTime recordDate
+        String diagnosis
+        String treatment
+        String prescriptions
+        String observations
+    }
