@@ -1,13 +1,18 @@
 package com.app.veterinaria.entity;
 
+import com.app.veterinaria.dto.NewAppointmentRequest;
 import com.app.veterinaria.entity.enums.AppointmentStatus;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Entity
 @Table(name = "appointments")
@@ -32,4 +37,10 @@ public class Appointment {
     @Enumerated(EnumType.STRING)
     private AppointmentStatus status;
 
+    public Appointment(LocalDate date, Pet pet, Veterinarian veterinarian) {
+        this.date = date;
+        this.pet = pet;
+        this.veterinarian = veterinarian;
+        this.status = AppointmentStatus.SCHEDULED;
+    }
 }

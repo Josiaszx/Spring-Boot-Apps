@@ -9,6 +9,8 @@ import com.app.veterinaria.entity.Veterinarian;
 import com.app.veterinaria.entity.enums.AppointmentStatus;
 import com.app.veterinaria.repository.VeterinarianRepository;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class VeterinarianService {
 
@@ -82,6 +84,12 @@ public class VeterinarianService {
         return new VeterinarianDto(veterianarioan, veterianarioan.getUser().getEmail());
     }
 
+    // obtener entidad veterinario por id
+    public Veterinarian findEntityById(Long id) {
+        return veterinarianRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Veterinarian not found"));
+    }
+
     // obtener citas de un veterinario
     public List<AppointmentDto> findAllAppointmentsByVeterinarian(Long veterinarianId, LocalDate date, String status) {
 
@@ -106,4 +114,5 @@ public class VeterinarianService {
                 .map(AppointmentDto::new)
                 .toList();
     }
+
 }

@@ -61,6 +61,12 @@ public class PetService {
         return new PetDto(pet);
     }
 
+    // retornar entidad mascota por id
+    public Pet findEntityById(Long petId) {
+        return petRepository.findById(petId)
+                .orElseThrow(() -> new IllegalArgumentException("Pet not found"));
+    }
+
     // actualizar mascota
     public PetDto update(Long petId, Pet newPet) {
         var pet = petRepository.findById(petId)
