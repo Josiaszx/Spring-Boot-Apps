@@ -4,10 +4,12 @@ import com.app.veterinaria.dto.NewVeterinarianRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
+@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 @Data

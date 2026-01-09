@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -60,58 +59,63 @@ public class AppointmentService {
             Integer page, Integer size
     ) {
 
-        var appointments = new ArrayList<Appointment>();
-        var notNullParams = new ArrayList<String>();
-        String[] aff = new String[10];
+        List<Appointment> appointments = new ArrayList<>();
+        boolean areAllParamsNull = true;
 
 
         if (petId != null) {
             var pet = petService.findEntityById(petId);
-            appointments.addAll(appointmentRepository.findAllByPet(pet));
-            notNullParams.add("petId");
+            appointments = appointmentRepository.findAllByPet(pet);
+            areAllParamsNull = false;
         }
 
         if (veterinarianId != null) {
             var veterinarian = veterinarianRepository.findById(veterinarianId)
                     .orElseThrow(() -> new IllegalArgumentException("Veterinarian not found"));
-            appointments.addAll(appointmentRepository.findAllByVeterinarian(veterinarian));
-            notNullParams.add("veterinarianId");
+
+            if (appointments.isEmpty()) {
+                appointments = appointmentRepository.findAllByVeterinarian(veterinarian);
+            } else {
+                appointments = appointments.stream()
+                        .filter(appointment -> appointment.getVeterinarian().equals(veterinarian))
+                        .toList();
+            }
+            areAllParamsNull = false;
         }
 
         if (status != null) {
-            appointments.addAll(findAllByStatus(status));
-            notNullParams.add("status");
+            if (appointments.isEmpty()) {
+                appointments = findAllByStatus(status);
+            } else {
+                appointments = appointments.stream()
+                        .filter(appointment -> appointment.getStatus() == AppointmentStatus.valueOf(status.toUpperCase()))
+                        .toList();
+            }
+            areAllParamsNull = false;
         }
 
         if (date != null) {
-            appointments.addAll(findAllByDate(date));
-            notNullParams.add("date");
+            if (appointments.isEmpty()) {
+                appointments = findAllByDate(date);
+            } else {
+                appointments = appointments.stream()
+                        .filter(appointment -> appointment.getDate().isEqual(date))
+                        .toList();
+            }
+            areAllParamsNull = false;
         }
 
-        // si notNullParams.isEmpty() == true, significa que no se dieron parametros, por lo tanto se asume que se quiere listar todas las citas
-        //
-        if (appointments.isEmpty() && notNullParams.isEmpty()) {
+        // areAllParamsNull == true, significa que no se dieron parametros, por lo tanto se asume que se quiere listar todas las citas
+        if (appointments.isEmpty() && areAllParamsNull) {
             Pageable pageable = PageRequest.of(page, size);
             return appointmentRepository.findAll(pageable).getContent().stream()
                     .map(AppointmentDto::new)
                     .toList();
-        } else if (appointments.isEmpty()) {
+        }
+        else if (appointments.isEmpty()) {
             // si la lista esta vacia y SI se dieron parametros, significa que no hay citas que coincidan con los parametros
             return new ArrayList<>(); // retornamos una lista vacia
         }
-
-        // filtrar citas que cumplan con todos los parametros dados
-        notNullParams.forEach(param -> {
-            switch (param) {
-                case "petId" -> appointments.removeIf(appointment -> !Objects.equals(appointment.getPet().getId(), petId));
-                case "veterinarianId" -> appointments.removeIf(appointment -> !appointment.getVeterinarian().getId().equals(veterinarianId));
-                case "status" -> appointments.removeIf(appointment -> appointment.getStatus() != AppointmentStatus.valueOf(status.toUpperCase()));
-                case "date" -> appointments.removeIf(appointment -> !appointment.getDate().isEqual(date));
-            }
-        });
-
-
-
 
         // paginacion
         var appointmentsDto = new ArrayList<AppointmentDto>();
@@ -125,8 +129,7 @@ public class AppointmentService {
             appointmentsDto.add(appointmentDto);
         }
 
-        // verificar que no haya duplicados
-        return new ArrayList<>(Set.copyOf(appointmentsDto));
+        return appointmentsDto;
     }
 
     // obtner por id
