@@ -59,17 +59,17 @@ Desarrollar una API REST para una clínica veterinaria que permita gestionar mas
 - **Request Body**:
 ```json
 {
-  "username": "juanperez",
-  "password": "password123"
+   "username": "juanperez",
+   "password": "password123"
 }
 ```
 - **Response**: `200 OK`
 ```json
 {
-  "token": "eyJhbGciOiJIUzI1NiIs...",
-  "type": "Bearer",
-  "username": "juanperez",
-  "role": "OWNER"
+   "token": "eyJhbGciOiJIUzI1NiIs...",
+   "type": "Bearer",
+   "username": "juanperez",
+   "role": "OWNER"
 }
 ```
 
@@ -81,13 +81,13 @@ Desarrollar una API REST para una clínica veterinaria que permita gestionar mas
 - **Request Body**:
 ```json
 {
-  "username": "dra.garcia",
-  "password": "vet123",
-  "email": "garcia@clinica.com",
-  "firstName": "María",
-  "lastName": "García",
-  "specialty": "Cirugía",
-  "licenseNumber": "VET-12345"
+   "username": "dra.garcia",
+   "password": "vet123",
+   "email": "garcia@clinica.com",
+   "firstName": "María",
+   "lastName": "García",
+   "specialty": "Cirugía",
+   "licenseNumber": "VET-12345"
 }
 ```
 
@@ -116,13 +116,13 @@ Desarrollar una API REST para una clínica veterinaria que permita gestionar mas
 - **Request Body:**
 ```json
 {
-  "phoneNumber": "093232",
-  "address": "Asuncion",
-  "username": "carlos01",
-  "firstName": "Carlos",
-  "lastName": "Lopez",
-  "password": "1234",
-  "email": "car@gmail.com"  
+   "phoneNumber": "093232",
+   "address": "Asuncion",
+   "username": "carlos01",
+   "firstName": "Carlos",
+   "lastName": "Lopez",
+   "password": "1234",
+   "email": "car@gmail.com"
 }
 ```
 
@@ -134,12 +134,12 @@ Desarrollar una API REST para una clínica veterinaria que permita gestionar mas
 - **Request Body**:
 ```json
 {
-  "name": "Rocky",
-  "species": "Perro",
-  "breed": "Golden Retriever",
-  "birthDate": "2020-05-15",
-  "gender": "Macho",
-  "weight": 28.5
+   "name": "Rocky",
+   "species": "Perro",
+   "breed": "Golden Retriever",
+   "birthDate": "2020-05-15",
+   "gender": "Macho",
+   "weight": 28.5
 }
 ```
 
@@ -199,10 +199,6 @@ Desarrollar una API REST para una clínica veterinaria que permita gestionar mas
 #### GET `/api/appointments/{id}`
 - **Descripción**: Obtener cita por ID
 - **Acceso**: ADMIN, VETERINARIAN, OWNER (solo citas de sus mascotas)
-
-#### PUT `/api/appointments/{id}`
-- **Descripción**: Actualizar cita
-- **Acceso**: ADMIN, VETERINARIAN, OWNER (solo sus citas y solo si está PENDING)
 
 #### PUT `/api/appointments/{id}/status`
 - **Descripción**: Cambiar estado de cita (PENDING, CONFIRMED, COMPLETED, CANCELLED)

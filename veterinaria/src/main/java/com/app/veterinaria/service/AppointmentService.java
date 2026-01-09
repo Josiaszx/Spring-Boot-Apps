@@ -11,12 +11,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -127,6 +125,25 @@ public class AppointmentService {
             appointmentsDto.add(appointmentDto);
         }
 
-        return appointmentsDto;
+        // verificar que no haya duplicados
+        return new ArrayList<>(Set.copyOf(appointmentsDto));
+    }
+
+    // obtner por id
+    public Appointment findById(Long id) {
+        return appointmentRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Appointment not found with id: " + id));
+    }
+
+    public AppointmentDto updateStatus(Long id, AppointmentStatus status) {
+        var appointment = findById(id);
+        appointment.setStatus(status);
+        appointment = appointmentRepository.save(appointment);
+        return new AppointmentDto(appointment);
+    }
+
+
+    public void deleteById(Long id) {
+        appointmentRepository.deleteById(id);
     }
 }

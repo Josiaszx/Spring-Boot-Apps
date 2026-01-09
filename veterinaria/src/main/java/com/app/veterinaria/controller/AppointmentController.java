@@ -2,6 +2,7 @@ package com.app.veterinaria.controller;
 
 import com.app.veterinaria.dto.AppointmentDto;
 import com.app.veterinaria.dto.NewAppointmentRequest;
+import com.app.veterinaria.entity.enums.AppointmentStatus;
 import com.app.veterinaria.service.AppointmentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,5 +35,20 @@ public class AppointmentController {
             @RequestParam(defaultValue = "10") Integer size
     ) {
         return appointmentService.findAllByParams(petId, veterinarianId, status, date, page, size);
+    }
+
+    @GetMapping("/{id}")
+    public AppointmentDto findById(@PathVariable Long id) {
+        return new AppointmentDto(appointmentService.findById(id));
+    }
+
+    @PutMapping("/{id}/status")
+    public AppointmentDto update(@PathVariable Long id, @RequestBody AppointmentStatus status) {
+        return appointmentService.updateStatus(id, status);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(Long id) {
+        appointmentService.deleteById(id);
     }
 }
