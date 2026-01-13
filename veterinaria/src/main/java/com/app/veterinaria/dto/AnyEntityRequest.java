@@ -13,5 +13,4 @@ public interface AnyEntityRequest {
     public Boolean getActive();
     public LocalDate getCreatedAt();
 
-
 }

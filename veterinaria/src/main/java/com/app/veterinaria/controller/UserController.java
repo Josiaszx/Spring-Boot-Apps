@@ -1,15 +1,13 @@
 package com.app.veterinaria.controller;
 
 import com.app.veterinaria.dto.NewVeterinarianRequest;
+import com.app.veterinaria.entity.User;
 import com.app.veterinaria.service.UserService;
 import com.app.veterinaria.service.VeterinarianService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /*
     CLASE DE ACCESO UNICO MEDIANTE ROL DE ADMIN
@@ -27,5 +25,13 @@ public class UserController {
     public ResponseEntity<?> createVeterinario(@Valid @RequestBody NewVeterinarianRequest request) {
         return veterinarianService.createAndSaveVeterinarianWithResponse(request);
     }
+
+    // TODO: obtener username desde Authentication
+    @GetMapping("/me")
+    public User getProfile() {
+        String username = null;
+        return userService.getProfile(username);
+    }
+
 
 }

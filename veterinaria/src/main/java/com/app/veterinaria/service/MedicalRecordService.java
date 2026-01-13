@@ -46,6 +46,7 @@ public class MedicalRecordService {
                 .orElseThrow(() -> new IllegalArgumentException("Medical Record not found"));
     }
 
+    // OBTNER EXPEDIENTES MEDICOS POR ID DE MASCOTA
     public List<MedicalRecordDto> findAllByPet(Long petId) {
         var pet = petService.findEntityById(petId);
 
@@ -57,6 +58,7 @@ public class MedicalRecordService {
                 .toList();
     }
 
+    // ACTUALIZAR EXPEDIENTE MEDICO
     public MedicalRecordDto updateRecord(Long id, NewMedicalRecordRequest request) {
         var record = findById(id);
         if (request.getDescription() != null) {

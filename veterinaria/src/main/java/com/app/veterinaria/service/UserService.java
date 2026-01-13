@@ -3,7 +3,6 @@ package com.app.veterinaria.service;
 import com.app.veterinaria.dto.AnyEntityRequest;
 import com.app.veterinaria.entity.Role;
 import com.app.veterinaria.entity.User;
-import com.app.veterinaria.repository.RoleRepository;
 import com.app.veterinaria.repository.UserRepository;
 import com.app.veterinaria.repository.VeterinarianRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +16,7 @@ import java.util.List;
 public class UserService{
 
     final private UserRepository userRepository;
-    final private RoleRepository roleRepository;
-    final private VeterinarianRepository veterinarianRepository;
+    final private RoleService roleService;
 
 
     // funcion para crear y guardar usuario
@@ -28,11 +26,9 @@ public class UserService{
 
         // rol por defecto: OWNER
         if (roleName == null) {
-            role = roleRepository.findByRole("OWNER")
-                    .orElseThrow(() -> new RuntimeException("Role not found: OWNER"));
+            role = roleService.findByRoleName("OWNER");
         } else {
-            role = roleRepository.findByRole(roleName.toUpperCase())
-                    .orElseThrow(() -> new RuntimeException("Role not found: " + roleName));
+            role = roleService.findByRoleName(roleName.toUpperCase());
         }
 
         var user = new User(newUser, role);
@@ -51,9 +47,9 @@ public class UserService{
         return userRepository.findAll();
     }
 
-    // obtener perfil del usuario autenticado (accesible con culquer rol: ADMIN, OWNER, VETERINARIAN)
-//    public User getUser() {
-//
-//    }
+    public User getProfile(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found for this username: " + username));
+    }
 
 }
