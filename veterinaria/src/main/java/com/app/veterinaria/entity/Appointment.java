@@ -39,6 +39,12 @@ public class Appointment {
     @Enumerated(EnumType.STRING)
     private AppointmentStatus status;
 
+    @Column
+    private String reason;
+
+    @Column
+    private String notes;
+
     public Appointment(LocalDate date, Pet pet, Veterinarian veterinarian) {
         this.date = date;
         this.pet = pet;

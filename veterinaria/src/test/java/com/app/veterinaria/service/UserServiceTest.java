@@ -5,6 +5,7 @@ import com.app.veterinaria.entity.Role;
 import com.app.veterinaria.entity.User;
 import com.app.veterinaria.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -61,6 +62,7 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Crear usuario correctamente")
     void createUserFromRequest() {
 
         when(roleService.findByRoleName("OWNER")).thenReturn(roleOwner);
@@ -98,6 +100,7 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Crear y guardar usuario correctamente")
     void createAndSaveUser() {
         when(userRepository.save(any(User.class))).thenReturn(expectedUser);
         User resultedUser = userService.createAndSaveUser(request);

@@ -1,5 +1,6 @@
 package com.app.veterinaria.dto;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,4 +30,10 @@ public class NewPetRequest{
     @NotNull(message = "el genero del animal no puede ser nulo")
     @NotBlank(message = "el genero del animal no puede estar vacio")
     private String gender;
+
+    private String breed;
+
+    private LocalDate birthDate;
+
+    private Double weight;
 }

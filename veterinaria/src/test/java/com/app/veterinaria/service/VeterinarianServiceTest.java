@@ -6,6 +6,7 @@ import com.app.veterinaria.dto.VeterinarianDto;
 import com.app.veterinaria.entity.*;
 import com.app.veterinaria.repository.VeterinarianRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -84,6 +85,7 @@ class VeterinarianServiceTest {
     }
 
     @Test
+    @DisplayName("Crear veterinario correctamente")
     void createVeterinarian() {
 
         when(userService.createAndSaveUser(request)).thenReturn(user);
@@ -105,6 +107,7 @@ class VeterinarianServiceTest {
     }
 
     @Test
+    @DisplayName("Crear y guardar veterinario correctamente")
     void createAndSaveVeterinarian() {
         when(userService.createAndSaveUser(request)).thenReturn(user);
         when(veterinarianRepository.save(veterinarian)).thenReturn(veterinarian);
@@ -114,6 +117,7 @@ class VeterinarianServiceTest {
     }
 
     @Test
+    @DisplayName("Crear veterinario correctamente con response")
     void createAndSaveVeterinarianWithResponse() {
         when(veterinarianService.createAndSaveVeterinarian(request)).thenReturn(veterinarian);
 
@@ -133,6 +137,7 @@ class VeterinarianServiceTest {
     }
 
     @Test
+    @DisplayName("Listar Veterinarios")
     void findAll() {
         var veterinariosDto = getVeterinariansDto();
         var veterinarios= getVeterinarians();
@@ -179,6 +184,7 @@ class VeterinarianServiceTest {
     }
 
     @Test
+    @DisplayName("Filtrar citas de veterinarios segun fecha")
     void filterByDate() {
         var appointments = getAppointments();
         var date1Appointments = getAppointments().subList(0, 3);
@@ -209,6 +215,7 @@ class VeterinarianServiceTest {
     }
 
     @Test
+    @DisplayName("Filtrar citas de veterinarios segun status")
     void filterByStatus() {
         var appointments = getAppointments();
         var scheduledAppointments = getAppointments().subList(0, 3);
@@ -241,6 +248,7 @@ class VeterinarianServiceTest {
 
 
     @Test
+    @DisplayName("Obtener citas de un veterinario")
     void findAllAppointmentsByVeterinarian() {
 
         var appointments = getAppointments();

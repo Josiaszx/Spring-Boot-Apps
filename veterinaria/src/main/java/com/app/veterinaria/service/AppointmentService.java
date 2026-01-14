@@ -3,6 +3,7 @@ package com.app.veterinaria.service;
 import com.app.veterinaria.dto.AppointmentDto;
 import com.app.veterinaria.dto.NewAppointmentRequest;
 import com.app.veterinaria.entity.Appointment;
+import com.app.veterinaria.entity.Pet;
 import com.app.veterinaria.entity.Veterinarian;
 import com.app.veterinaria.entity.enums.AppointmentStatus;
 import com.app.veterinaria.repository.AppointmentRepository;
@@ -20,9 +21,14 @@ import java.util.*;
 public class AppointmentService {
 
     final private AppointmentRepository appointmentRepository;
-    // usamos el repositorio de veterinarios para evitar ciclo de inyeccion
-    final private VeterinarianRepository veterinarianRepository;
     final private PetService petService;
+
+    // usamos el repositorio de veterinarios para evitar ciclo de inyeccion ya que esta clase tambien se inyecta en VeterinarianService
+    final private VeterinarianRepository veterinarianRepository;
+    public Veterinarian getVeterinarianById(Long id) {
+        return veterinarianRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Veterinarian not found with id: " + id));
+    }
 
 
     // listar citas segun id de veterinario
@@ -36,7 +42,7 @@ public class AppointmentService {
     }
 
     // listar citas segun estado
-    public List<Appointment> findAllByStatus(String status) {
+    public List<Appointment>findAllByStatus(String status) {
         return appointmentRepository.findAllByStatus(
                 AppointmentStatus.valueOf(status.toUpperCase())
         );
@@ -45,66 +51,32 @@ public class AppointmentService {
     // agendar cita
     public AppointmentDto save(NewAppointmentRequest request) {
         var pet = petService.findEntityById(request.getPetId());
-        var veterinarian = veterinarianRepository.findById(request.getVeterinarianId())
-                .orElseThrow(() -> new IllegalArgumentException("Veterinarian not found"));
+        var veterinarian = getVeterinarianById(request.getVeterinarianId());
         var date = request.getDate();
+        if (date.isBefore(LocalDate.now())) throw new IllegalArgumentException("Date must be greater than today");
         var appointment = new Appointment(date, pet, veterinarian);
+        appointment.setReason(request.getReason());
+        appointment.setNotes(request.getNotes());
         appointment = appointmentRepository.save(appointment);
         return new AppointmentDto(appointment);
     }
 
     // listar citas segun parametros
     public List<AppointmentDto> findAllByParams(
-            Long petId, Long veterinarianId, String status, LocalDate date,
-            Integer page, Integer size
+            Long petId, Long veterinarianId, String status, LocalDate date, Integer page, Integer size
     ) {
 
         List<Appointment> appointments = new ArrayList<>();
-        boolean areAllParamsNull = true;
 
+        if (petId != null) appointments = filterByPet(petId, appointments);
 
-        if (petId != null) {
-            var pet = petService.findEntityById(petId);
-            appointments = appointmentRepository.findAllByPet(pet);
-            areAllParamsNull = false;
-        }
+        if (veterinarianId != null) appointments = filterByVeterinarian(veterinarianId, appointments);
 
-        if (veterinarianId != null) {
-            var veterinarian = veterinarianRepository.findById(veterinarianId)
-                    .orElseThrow(() -> new IllegalArgumentException("Veterinarian not found"));
+        if (status != null) appointments = filterByStatus(status, appointments);
 
-            if (appointments.isEmpty()) {
-                appointments = appointmentRepository.findAllByVeterinarian(veterinarian);
-            } else {
-                appointments = appointments.stream()
-                        .filter(appointment -> appointment.getVeterinarian().equals(veterinarian))
-                        .toList();
-            }
-            areAllParamsNull = false;
-        }
+        if (date != null) appointments = filterByDate(date, appointments);
 
-        if (status != null) {
-            if (appointments.isEmpty()) {
-                appointments = findAllByStatus(status);
-            } else {
-                appointments = appointments.stream()
-                        .filter(appointment -> appointment.getStatus() == AppointmentStatus.valueOf(status.toUpperCase()))
-                        .toList();
-            }
-            areAllParamsNull = false;
-        }
-
-        if (date != null) {
-            if (appointments.isEmpty()) {
-                appointments = findAllByDate(date);
-            } else {
-                appointments = appointments.stream()
-                        .filter(appointment -> appointment.getDate().isEqual(date))
-                        .toList();
-            }
-            areAllParamsNull = false;
-        }
-
+        boolean areAllParamsNull = petId == null && veterinarianId == null && status == null && date == null;
         // areAllParamsNull == true, significa que no se dieron parametros, por lo tanto se asume que se quiere listar todas las citas
         if (appointments.isEmpty() && areAllParamsNull) {
             Pageable pageable = PageRequest.of(page, size);
@@ -114,17 +86,63 @@ public class AppointmentService {
         }
         else if (appointments.isEmpty()) {
             // si la lista esta vacia y SI se dieron parametros, significa que no hay citas que coincidan con los parametros
-            return new ArrayList<>(); // retornamos una lista vacia
+            return List.of();
         }
 
-        // paginacion
+        return paginate(appointments, page, size);
+    }
+
+    // filtrar citas por mascota
+    public List<Appointment> filterByPet(Long petId, List<Appointment> appointments) {
+        var pet = petService.findEntityById(petId);
+        return appointmentRepository.findAllByPet(pet);
+    }
+
+    // filtrar citas por veterinario
+    public List<Appointment> filterByVeterinarian(Long veterinarianId, List<Appointment> appointments) {
+        var veterinarian = getVeterinarianById(veterinarianId);
+
+        if (appointments.isEmpty()) {
+            return appointmentRepository.findAllByVeterinarian(veterinarian);
+        } else {
+            return appointments.stream()
+                    .filter(appointment -> appointment.getVeterinarian().equals(veterinarian))
+                    .toList();
+        }
+    }
+
+    // filtrar citas por status
+    public List<Appointment> filterByStatus(String status, List<Appointment> appointments) {
+        if (appointments.isEmpty()) {
+            return findAllByStatus(status);
+        } else {
+            return appointments.stream()
+                    .filter(appointment -> appointment.getStatus() == AppointmentStatus.valueOf(status.toUpperCase()))
+                    .toList();
+        }
+    }
+
+    // filtrar citas por fecha
+    public List<Appointment> filterByDate(LocalDate date, List<Appointment> appointments) {
+        if (appointments == null || date == null) throw new IllegalArgumentException("Date and appointments cannot be null");
+        if (appointments.isEmpty()) {
+            return findAllByDate(date);
+        } else {
+            return appointments.stream()
+                    .filter(appointment -> appointment.getDate().isEqual(date))
+                    .toList();
+        }
+    }
+
+    // paginar respuesta
+    public List<AppointmentDto> paginate(List<Appointment> appointments, Integer page, Integer size) {
+        if (page < 0 || size < 0) throw new IllegalArgumentException("Page number cannot be negative");
         var appointmentsDto = new ArrayList<AppointmentDto>();
         int startItem = page * size;
-        int endItem = startItem + size - 1;
+        int endItem = startItem + size;
 
         for (int i = startItem; i < endItem; i++) {
             if (i >= appointments.size()) break;
-
             var appointmentDto = new AppointmentDto(appointments.get(i));
             appointmentsDto.add(appointmentDto);
         }
