@@ -3,11 +3,13 @@ package com.app.veterinaria.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder
 public class NewVeterinarianRequest extends EntityRequest {
 
     @NotNull(message = "La especialidad no puede ser nulo")

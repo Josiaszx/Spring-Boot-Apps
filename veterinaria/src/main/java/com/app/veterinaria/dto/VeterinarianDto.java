@@ -3,10 +3,15 @@ package com.app.veterinaria.dto;
 import com.app.veterinaria.entity.User;
 import com.app.veterinaria.entity.Veterinarian;
 import jakarta.persistence.Column;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
+@Builder
 public class VeterinarianDto {
 
     private String email;

@@ -3,6 +3,7 @@ package com.app.veterinaria.service;
 import com.app.veterinaria.dto.AppointmentDto;
 import com.app.veterinaria.dto.NewVeterinarianRequest;
 import com.app.veterinaria.dto.VeterinarianDto;
+import com.app.veterinaria.entity.Appointment;
 import com.app.veterinaria.entity.Veterinarian;
 import com.app.veterinaria.entity.enums.AppointmentStatus;
 import com.app.veterinaria.repository.VeterinarianRepository;
@@ -24,7 +25,7 @@ public class VeterinarianService {
     final private AppointmentService appointmentService;
 
     // crear veterinario
-    public Veterinarian createAndSaveVeterinarian(NewVeterinarianRequest request) {
+    public Veterinarian createVeterinarian(NewVeterinarianRequest request) {
         if (request.getRole() == null) {
             request.setRole("VETERINARIAN");
         } else if (!request.getRole().equalsIgnoreCase("VETERINARIAN")) {
@@ -32,7 +33,12 @@ public class VeterinarianService {
         }
 
         var user = userService.createAndSaveUser(request);
-        var veterinarian = new Veterinarian(request, user);
+        return new Veterinarian(request, user);
+    }
+
+    // crear veterinario y guardarlo
+    public Veterinarian createAndSaveVeterinarian(NewVeterinarianRequest request) {
+        var veterinarian = createVeterinarian(request);
         return veterinarianRepository.save(veterinarian);
     }
 
@@ -88,25 +94,33 @@ public class VeterinarianService {
     // obtener citas de un veterinario
     public List<AppointmentDto> findAllAppointmentsByVeterinarian(Long veterinarianId, LocalDate date, String status) {
 
-        var veterinarian = veterinarianRepository.findById(veterinarianId)
-                .orElseThrow(() -> new IllegalArgumentException("Veterinarian not found"));
-
+        var veterinarian = findEntityById(veterinarianId);
         var appointments = appointmentService.findAllByVeterianrian(veterinarian);
 
-        if (date != null) {
-            appointments = appointments.stream()
-                    .filter(appointment -> appointment.getDate().isEqual(date))
-                    .toList();
-        }
+        if (date != null) appointments = filterByDate(date, appointments);
 
-        if (status != null) {
-            appointments = appointments.stream()
-                    .filter(appointment -> appointment.getStatus() == AppointmentStatus.valueOf(status.toUpperCase()))
-                    .toList();
-        }
+        if (status != null) appointments = filterByStatus(status, appointments);
 
         return appointments.stream()
                 .map(AppointmentDto::new)
+                .toList();
+    }
+
+    public List<Appointment> filterByDate(LocalDate date, List<Appointment> appointments) {
+        return appointments.stream()
+                .filter(appointment -> appointment.getDate().isEqual(date))
+                .toList();
+    }
+
+    public List<Appointment> filterByStatus(String status, List<Appointment> appointments) {
+        var finalStatus = status.toUpperCase();
+        var validStatuses = List.of("CANCELLED", "SCHEDULED", "CLOSED");
+        if (!validStatuses.contains(finalStatus)) {
+            throw new IllegalArgumentException("Status must be CANCELLED, SCHEDULED or CLOSED");
+        }
+
+        return appointments.stream()
+                .filter(appointment -> appointment.getStatus() == AppointmentStatus.valueOf(finalStatus))
                 .toList();
     }
 
