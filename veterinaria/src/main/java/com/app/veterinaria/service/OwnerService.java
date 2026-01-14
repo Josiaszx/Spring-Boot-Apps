@@ -2,12 +2,10 @@ package com.app.veterinaria.service;
 
 import com.app.veterinaria.dto.NewOwnerRequest;
 import com.app.veterinaria.entity.Owner;
-import com.app.veterinaria.entity.User;
 import com.app.veterinaria.repository.OwnerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
@@ -47,7 +45,7 @@ public class OwnerService {
 
     // crear dueño (requiere rol: ADMIN o VETERINARIAN)
     public Owner save(NewOwnerRequest ownerRequest) {
-        var user = userService.createAndSaveUserFrom(ownerRequest);
+        var user = userService.createAndSaveUser(ownerRequest);
         var owner = new Owner(ownerRequest, user);
         return ownerRepository.save(owner);
     }

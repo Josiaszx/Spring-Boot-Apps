@@ -1,6 +1,5 @@
 package com.app.veterinaria.controller;
 
-import com.app.veterinaria.dto.NewUserRequest;
 import com.app.veterinaria.entity.User;
 import com.app.veterinaria.security.UserLoginRequest;
 import com.app.veterinaria.service.AuthenticationService;
@@ -19,14 +18,8 @@ public class AuthenticationController {
 
     final private AuthenticationService authenticationService;
 
-    // TODO: inyectar objeto Authentication
-    @PostMapping("/register")
-    public User register(@Valid @RequestBody NewUserRequest user) {
-        return authenticationService.register(user);
-    }
-
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLoginRequest userLoginRequest) {
-        return AuthenticationService.login(userLoginRequest);
+        return authenticationService.login(userLoginRequest);
     }
 }

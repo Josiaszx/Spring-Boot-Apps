@@ -1,6 +1,5 @@
 package com.app.veterinaria.service;
 
-import com.app.veterinaria.dto.NewUserRequest;
 import com.app.veterinaria.entity.Role;
 import com.app.veterinaria.entity.User;
 import com.app.veterinaria.security.UserLoginRequest;
@@ -17,13 +16,11 @@ public class AuthenticationService {
 
     final private UserService userService;
     final private RoleService roleService;
+    private final OwnerService ownerService;
 
-    public static ResponseEntity<?> login(UserLoginRequest userLoginRequest) {
+
+    public ResponseEntity<?> login(UserLoginRequest userLoginRequest) {
         // todo: implemtear jwt
         return null;
-    }
-
-    public User register(@Valid NewUserRequest user) {
-        return userService.createAndSaveUserFrom(user);
     }
 }

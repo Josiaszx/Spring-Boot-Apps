@@ -3,20 +3,15 @@ package com.app.veterinaria.service;
 import com.app.veterinaria.dto.AppointmentDto;
 import com.app.veterinaria.dto.NewVeterinarianRequest;
 import com.app.veterinaria.dto.VeterinarianDto;
-import com.app.veterinaria.entity.Appointment;
-import com.app.veterinaria.entity.User;
 import com.app.veterinaria.entity.Veterinarian;
 import com.app.veterinaria.entity.enums.AppointmentStatus;
 import com.app.veterinaria.repository.VeterinarianRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,7 +31,7 @@ public class VeterinarianService {
             throw new IllegalArgumentException("Role must be VETERINARIAN");
         }
 
-        var user = userService.createAndSaveUserFrom(request);
+        var user = userService.createAndSaveUser(request);
         var veterinarian = new Veterinarian(request, user);
         return veterinarianRepository.save(veterinarian);
     }

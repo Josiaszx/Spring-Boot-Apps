@@ -4,7 +4,6 @@ import com.app.veterinaria.dto.AnyEntityRequest;
 import com.app.veterinaria.entity.Role;
 import com.app.veterinaria.entity.User;
 import com.app.veterinaria.repository.UserRepository;
-import com.app.veterinaria.repository.VeterinarianRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +17,14 @@ public class UserService{
     final private UserRepository userRepository;
     final private RoleService roleService;
 
+    // crear y guardar usuario
+    public User createAndSaveUser(AnyEntityRequest newUser) {
+        var createdUser = createUserFromRequest(newUser);
+        return save(createdUser);
+    }
 
-    // funcion para crear y guardar usuario
-    public User createAndSaveUserFrom(AnyEntityRequest newUser) {
+    // crear usuario apartir de objeto que implemente AnyEntityRequest
+    public User createUserFromRequest(AnyEntityRequest newUser) {
         Role role;
         String roleName = newUser.getRole();
 
@@ -31,7 +35,11 @@ public class UserService{
             role = roleService.findByRoleName(roleName.toUpperCase());
         }
 
-        var user = new User(newUser, role);
+        return new User(newUser, role);
+    }
+
+    // guardar usuario
+    public User save(User user) {
         return userRepository.save(user);
     }
 
@@ -51,5 +59,6 @@ public class UserService{
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found for this username: " + username));
     }
+
 
 }

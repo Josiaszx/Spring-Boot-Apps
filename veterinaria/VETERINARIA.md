@@ -38,19 +38,6 @@ Desarrollar una API REST para una clínica veterinaria que permita gestionar mas
 
 ### 1. Autenticación (`/api/auth`)
 
-#### POST `/api/auth/register`
-- **Descripción**: Registrar un nuevo usuario (dueño)
-- **Acceso**: Público
-- **Request Body**:
-```json
-{
-   "username": "juanperez",
-   "password": "password123",
-   "email": "juan@email.com",
-   "firstName": "Juan",
-   "lastName": "Pérez",
-}
-```
 - **Response**: `201 Created`
 
 #### POST `/api/auth/login`
