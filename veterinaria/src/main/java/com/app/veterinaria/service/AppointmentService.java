@@ -3,8 +3,10 @@ package com.app.veterinaria.service;
 import com.app.veterinaria.dto.AppointmentDto;
 import com.app.veterinaria.dto.NewAppointmentRequest;
 import com.app.veterinaria.entity.Appointment;
+import com.app.veterinaria.entity.Pet;
 import com.app.veterinaria.entity.Veterinarian;
 import com.app.veterinaria.entity.enums.AppointmentStatus;
+import com.app.veterinaria.exception.InvalidOperationException;
 import com.app.veterinaria.exception.ResourceNotFoundException;
 import com.app.veterinaria.repository.AppointmentRepository;
 import com.app.veterinaria.repository.VeterinarianRepository;
@@ -14,7 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -38,7 +40,7 @@ public class AppointmentService {
     }
 
     // lista citas segun fecha
-    public List<Appointment> findAllByDate(LocalDate date) {
+    public List<Appointment> findAllByDate(LocalDateTime date) {
         return appointmentRepository.findAllByDate(date);
     }
 
@@ -54,17 +56,19 @@ public class AppointmentService {
         var pet = petService.findEntityById(request.getPetId());
         var veterinarian = getVeterinarianById(request.getVeterinarianId());
         var date = request.getDate();
-        if (date.isBefore(LocalDate.now())) throw new IllegalArgumentException("Date must be greater than today");
+        if (date.isBefore(LocalDateTime.now())) throw new InvalidOperationException("Date must be greater than today", "api/appointments");
         var appointment = new Appointment(date, pet, veterinarian);
         appointment.setReason(request.getReason());
         appointment.setNotes(request.getNotes());
+        checkVeterinarianAvailability(date, veterinarian);
+        checkPetAvailability(date, pet);
         appointment = appointmentRepository.save(appointment);
         return new AppointmentDto(appointment);
     }
 
     // listar citas segun parametros
     public List<AppointmentDto> findAllByParams(
-            Long petId, Long veterinarianId, String status, LocalDate date, Integer page, Integer size
+            Long petId, Long veterinarianId, String status, LocalDateTime date, Integer page, Integer size
     ) {
 
         List<Appointment> appointments = new ArrayList<>();
@@ -124,7 +128,7 @@ public class AppointmentService {
     }
 
     // filtrar citas por fecha
-    public List<Appointment> filterByDate(LocalDate date, List<Appointment> appointments) {
+    public List<Appointment> filterByDate(LocalDateTime date, List<Appointment> appointments) {
         if (appointments == null || date == null) throw new IllegalArgumentException("Date and appointments cannot be null");
         if (appointments.isEmpty()) {
             return findAllByDate(date);
@@ -169,8 +173,22 @@ public class AppointmentService {
         return new AppointmentDto(appointment);
     }
 
-
     public void deleteById(Long id) {
         appointmentRepository.deleteById(id);
+    }
+
+    // chequear si un veterinario ya tiene cita en un horario especifico
+    public void checkVeterinarianAvailability(LocalDateTime newAppointmetDate, Veterinarian veterinarian) {
+        boolean conflictingAppointment = appointmentRepository.existsByDateAndVeterinarian(newAppointmetDate, veterinarian);
+        if (conflictingAppointment) {
+            throw new InvalidOperationException("Veterinarian already has an appointment on that date", "api/appointments");
+        }
+    }
+
+    public void checkPetAvailability(LocalDateTime newAppointmentDate, Pet pet) {
+        var conflictingAppointment = appointmentRepository.existsByDateAndPet(newAppointmentDate, pet);
+        if (conflictingAppointment) {
+            throw new InvalidOperationException("Pet already has an appointment on that date", "api/appointments");
+        }
     }
 }

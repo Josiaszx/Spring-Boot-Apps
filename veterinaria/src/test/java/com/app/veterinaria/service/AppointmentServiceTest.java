@@ -6,6 +6,7 @@ import com.app.veterinaria.entity.Appointment;
 import com.app.veterinaria.entity.Owner;
 import com.app.veterinaria.entity.Pet;
 import com.app.veterinaria.entity.Veterinarian;
+import com.app.veterinaria.exception.InvalidOperationException;
 import com.app.veterinaria.exception.ResourceNotFoundException;
 import com.app.veterinaria.repository.AppointmentRepository;
 import com.app.veterinaria.repository.VeterinarianRepository;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,7 +78,7 @@ class AppointmentServiceTest {
                 .id(1L)
                 .pet(pet).
                 veterinarian(veterinarian)
-                .date(LocalDate.now())
+                .date(LocalDateTime.of(2026, 10, 10, 14, 20))
                 .status(SCHEDULED)
                 .reason("vacunacion")
                 .notes("reposar")
@@ -86,7 +88,7 @@ class AppointmentServiceTest {
                 .id(1L)
                 .petName("Pancho")
                 .veterinarianName("Carlos Ramos")
-                .date(LocalDate.now())
+                .date(LocalDateTime.of(2026, 10, 10, 14, 20))
                 .status(SCHEDULED)
                 .ownerName("Juan Lopez")
                 .reason("vacunacion")
@@ -96,7 +98,7 @@ class AppointmentServiceTest {
         request = NewAppointmentRequest.builder()
                 .petId(1L)
                 .veterinarianId(1L)
-                .date(LocalDate.now())
+                .date(LocalDateTime.of(2026, 10, 10, 14, 20))
                 .reason("vacunacion")
                 .notes("reposar")
                 .build();
@@ -114,8 +116,8 @@ class AppointmentServiceTest {
         assertEquals(appointmentDto, result);
 
         // verificar error si la fecha es anterior a hoy
-        request.setDate(LocalDate.of(2020, 10, 10));
-        assertThrows(IllegalArgumentException.class, () -> appointmentService.save(request));
+        request.setDate(LocalDateTime.of(2020, 10, 10, 10, 0));
+        assertThrows(InvalidOperationException.class, () -> appointmentService.save(request));
     }
 
     @Test
@@ -266,17 +268,17 @@ class AppointmentServiceTest {
     void filterByDate() {
         var appointments = getAppointments();
 
-        var date1 = LocalDate.now().plusDays(1);
-        var date2 = LocalDate.now().plusDays(2);
-        var date3 = LocalDate.now();
+        var date1 = LocalDateTime.now().plusDays(1);
+        var date2 = LocalDateTime.now().plusDays(2);
+        var date3 = LocalDateTime.now();
 
         var date1Appointments = appointments.subList(0, 3);
         var date2Appointments = List.of(appointments.get(3), appointments.get(5));
         var date3Appointments = List.of(appointments.get(4), appointments.getLast());
 
-        when(appointmentRepository.findAllByDate(LocalDate.now().plusDays(1))).thenReturn(date1Appointments);
-        when(appointmentRepository.findAllByDate(LocalDate.now().plusDays(2))).thenReturn(date2Appointments);
-        when(appointmentRepository.findAllByDate(LocalDate.now())).thenReturn(date3Appointments);
+        when(appointmentRepository.findAllByDate(date1)).thenReturn(date1Appointments);
+        when(appointmentRepository.findAllByDate(date2)).thenReturn(date2Appointments);
+        when(appointmentRepository.findAllByDate(date3)).thenReturn(date3Appointments);
 
         // probar cuando la lista dada ya contiene elementos
         var result = appointmentService.filterByDate(date1, appointments);
@@ -300,7 +302,7 @@ class AppointmentServiceTest {
 
         // probar error cuando se pasa un parametro como null
         assertThrows(IllegalArgumentException.class, () -> appointmentService.filterByDate(null, appointments));
-        assertThrows(IllegalArgumentException.class, () -> appointmentService.filterByDate(LocalDate.now(), null));
+        assertThrows(IllegalArgumentException.class, () -> appointmentService.filterByDate(LocalDateTime.now(), null));
         assertThrows(IllegalArgumentException.class, () -> appointmentService.filterByDate(null, null));
     }
 
@@ -424,12 +426,32 @@ class AppointmentServiceTest {
         assertTrue(result.isEmpty());
 
         // probar filtrado por fecha
-        LocalDate date = LocalDate.now();
+        LocalDateTime date = LocalDateTime.now();
         var dateAppointments = List.of(appointments.get(4), appointments.get(6));
         when(appointmentRepository.findAllByDate(date)).thenReturn(dateAppointments);
 
         result = appointmentService.findAllByParams(null, null, null, date, 0, 10);
         assertEquals(2, result.size());
+    }
+
+    @Test
+    @DisplayName("Chequear disponibilidad de veterinario")
+    void checkVeterinarianAvailability() {
+        var veterinarian = getVeterinarians().getFirst();
+        var date = LocalDateTime.now().plusDays(1);
+
+        when(appointmentRepository.existsByDateAndVeterinarian(any(), any())).thenReturn(true);
+        assertThrows(InvalidOperationException.class, () -> appointmentService.checkVeterinarianAvailability(date, veterinarian));
+    }
+
+    @Test
+    @DisplayName("Chequear disponibilidad de veterinario")
+    void checkPetAvailability() {
+        var pet = getPets().getFirst();
+        var date = LocalDateTime.now().plusDays(1);
+
+        when(appointmentRepository.existsByDateAndPet(any(), any())).thenReturn(true);
+        assertThrows(InvalidOperationException.class, () -> appointmentService.checkPetAvailability(date, pet));
     }
 
     List<Pet> getPets() {
@@ -438,34 +460,16 @@ class AppointmentServiceTest {
         owner.setLastName("Lopez");
 
         return List.of(
-                Pet.builder()
-                        .id(1L)
-                        .name("Pancho")
-                        .owner(owner)
-                        .build(),
-                Pet.builder()
-                        .id(2L)
-                        .name("Michi")
-                        .owner(owner)
-                        .build(),
-                Pet.builder()
-                        .id(3L)
-                        .name("Doggy")
-                        .owner(owner)
-                        .build()
+                Pet.builder().id(1L).name("Pancho").owner(owner).build(),
+                Pet.builder().id(2L).name("Michi").owner(owner).build(),
+                Pet.builder().id(3L).name("Doggy").owner(owner).build()
         );
     }
 
     List<Veterinarian> getVeterinarians() {
         return List.of(
-                Veterinarian.builder()
-                        .id(1L)
-                        .firstName("Carlos")
-                        .build(),
-                Veterinarian.builder()
-                        .id(2L)
-                        .firstName("Juan")
-                        .build()
+                Veterinarian.builder().id(1L).firstName("Carlos").build(),
+                Veterinarian.builder().id(2L).firstName("Juan").build()
         );
     }
 
@@ -474,55 +478,13 @@ class AppointmentServiceTest {
         var veterinarians = getVeterinarians();
 
         return List.of(
-                Appointment.builder()
-                        .id(1L)
-                        .pet(pets.getFirst())
-                        .veterinarian(veterinarians.getFirst())
-                        .status(SCHEDULED)
-                        .date(LocalDate.now().plusDays(1))
-                        .build(),
-                Appointment.builder()
-                        .id(2L)
-                        .pet(pets.get(1))
-                        .veterinarian(veterinarians.get(1))
-                        .status(SCHEDULED)
-                        .date(LocalDate.now().plusDays(1))
-                        .build(),
-                Appointment.builder()
-                        .id(3L)
-                        .pet(pets.get(2))
-                        .veterinarian(veterinarians.get(1))
-                        .date(LocalDate.now().plusDays(1))
-                        .status(SCHEDULED)
-                        .build(),
-                Appointment.builder()
-                        .id(4L)
-                        .pet(pets.get(2))
-                        .veterinarian(veterinarians.get(1))
-                        .date(LocalDate.now().plusDays(2))
-                        .status(SCHEDULED)
-                        .build(),
-                Appointment.builder()
-                        .id(5L)
-                        .pet(pets.get(1))
-                        .veterinarian(veterinarians.getFirst())
-                        .date(LocalDate.now())
-                        .status(CLOSED)
-                        .build(),
-                Appointment.builder()
-                        .id(6L)
-                        .pet(pets.get(1))
-                        .veterinarian(veterinarians.get(1))
-                        .date(LocalDate.now().plusDays(2))
-                        .status(CANCELLED)
-                        .build(),
-                Appointment.builder()
-                        .id(7L)
-                        .pet(pets.getFirst())
-                        .veterinarian(veterinarians.getFirst())
-                        .status(CLOSED)
-                        .date(LocalDate.now())
-                        .build()
+                Appointment.builder().id(1L).pet(pets.getFirst()).veterinarian(veterinarians.getFirst()).status(SCHEDULED).date(LocalDateTime.now().plusDays(1)).build(),
+                Appointment.builder().id(2L).pet(pets.get(1)).veterinarian(veterinarians.get(1)).status(SCHEDULED).date(LocalDateTime.now().plusDays(1)).build(),
+                Appointment.builder().id(3L).pet(pets.get(2)).veterinarian(veterinarians.get(1)).date(LocalDateTime.now().plusDays(1)).status(SCHEDULED).build(),
+                Appointment.builder().id(4L).pet(pets.get(2)).veterinarian(veterinarians.get(1)).date(LocalDateTime.now().plusDays(2)).status(SCHEDULED).build(),
+                Appointment.builder().id(5L).pet(pets.get(1)).veterinarian(veterinarians.getFirst()).date(LocalDateTime.now()).status(CLOSED).build(),
+                Appointment.builder().id(6L).pet(pets.get(1)).veterinarian(veterinarians.get(1)).date(LocalDateTime.now().plusDays(2)).status(CANCELLED).build(),
+                Appointment.builder().id(7L).pet(pets.getFirst()).veterinarian(veterinarians.getFirst()).status(CLOSED).date(LocalDateTime.now()).build()
         );
     }
 

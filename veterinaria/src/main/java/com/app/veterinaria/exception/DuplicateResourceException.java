@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 public class DuplicateResourceException extends RuntimeException {
-    final private HttpStatus status = HttpStatus.BAD_REQUEST;
+    final private HttpStatus status = HttpStatus.CONFLICT;
     final private LocalDateTime timestamp = LocalDateTime.now().truncatedTo(java.time.temporal.ChronoUnit.SECONDS);
     private String path;
     private HttpMethod method = HttpMethod.POST;

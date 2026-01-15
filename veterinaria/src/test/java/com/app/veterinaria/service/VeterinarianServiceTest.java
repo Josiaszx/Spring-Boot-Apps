@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -199,25 +200,25 @@ class VeterinarianServiceTest {
         var date4Appointments = getAppointments().subList(7, 9);
 
         // caso general, si no existe dicha fecha, retornar una lista vacia
-        var result = veterinarianService.filterByDate(LocalDate.of(1999, 12, 10), appointments);
+        var result = veterinarianService.filterByDate(LocalDateTime.of(1999, 12, 10, 0, 0), appointments);
         assertEquals(List.of(), result);
 
         // comprobar que se retornan las citas de las fechas indicadas
         var expected = date1Appointments;
-        result = veterinarianService.filterByDate(LocalDate.now(), appointments);
         assertEquals(expected, result);
+        result = veterinarianService.filterByDate(LocalDateTime.now(), appointments);
 
         expected = date2Appointments;
-        result = veterinarianService.filterByDate(LocalDate.now().plusDays(1), appointments);
         assertEquals(expected, result);
+        result = veterinarianService.filterByDate(LocalDateTime.now().plusDays(1), appointments);
 
         expected = date3Appointments;
-        result = veterinarianService.filterByDate(LocalDate.now().plusDays(2), appointments);
         assertEquals(expected, result);
+        result = veterinarianService.filterByDate(LocalDateTime.now().plusDays(2), appointments);
 
         expected = date4Appointments;
-        result = veterinarianService.filterByDate(LocalDate.now().plusDays(3), appointments);
         assertEquals(expected, result);
+        result = veterinarianService.filterByDate(LocalDateTime.now().plusDays(3), appointments);
     }
 
     @Test
@@ -349,15 +350,15 @@ class VeterinarianServiceTest {
         pet2.getOwner().setLastName("Lopez");
 
         return List.of(
-                Appointment.builder().id(1L).date(LocalDate.now()).pet(pet1).veterinarian(vet1).status(SCHEDULED).build(),
-                Appointment.builder().id(2L).date(LocalDate.now()).pet(pet2).veterinarian(vet1).status(SCHEDULED).build(),
-                Appointment.builder().id(3L).date(LocalDate.now()).pet(pet1).veterinarian(vet1).status(SCHEDULED).build(),
-                Appointment.builder().id(4L).date(LocalDate.now().plusDays(1)).pet(pet2).veterinarian(vet2).status(CANCELLED).build(),
-                Appointment.builder().id(5L).date(LocalDate.now().plusDays(1)).pet(pet1).veterinarian(vet2).status(CANCELLED).build(),
-                Appointment.builder().id(6L).date(LocalDate.now().plusDays(2)).pet(pet2).veterinarian(vet2).status(CANCELLED).build(),
-                Appointment.builder().id(7L).date(LocalDate.now().plusDays(2)).pet(pet1).veterinarian(vet3).status(CLOSED).build(),
-                Appointment.builder().id(8L).date(LocalDate.now().plusDays(3)).pet(pet2).veterinarian(vet3).status(CLOSED).build(),
-                Appointment.builder().id(9L).date(LocalDate.now().plusDays(3)).pet(pet1).veterinarian(vet3).status(CLOSED).build()
+                Appointment.builder().id(2L).date(LocalDateTime.now()).pet(pet2).veterinarian(vet1).status(SCHEDULED).build(),
+                Appointment.builder().id(1L).date(LocalDateTime.now()).pet(pet1).veterinarian(vet1).status(SCHEDULED).build(),
+                Appointment.builder().id(3L).date(LocalDateTime.now()).pet(pet1).veterinarian(vet1).status(SCHEDULED).build(),
+                Appointment.builder().id(4L).date(LocalDateTime.now().plusDays(1)).pet(pet2).veterinarian(vet2).status(CANCELLED).build(),
+                Appointment.builder().id(5L).date(LocalDateTime.now().plusDays(1)).pet(pet1).veterinarian(vet2).status(CANCELLED).build(),
+                Appointment.builder().id(6L).date(LocalDateTime.now().plusDays(2)).pet(pet2).veterinarian(vet2).status(CANCELLED).build(),
+                Appointment.builder().id(7L).date(LocalDateTime.now().plusDays(2)).pet(pet1).veterinarian(vet3).status(CLOSED).build(),
+                Appointment.builder().id(8L).date(LocalDateTime.now().plusDays(3)).pet(pet2).veterinarian(vet3).status(CLOSED).build(),
+                Appointment.builder().id(9L).date(LocalDateTime.now().plusDays(3)).pet(pet1).veterinarian(vet3).status(CLOSED).build()
         );
     }
 

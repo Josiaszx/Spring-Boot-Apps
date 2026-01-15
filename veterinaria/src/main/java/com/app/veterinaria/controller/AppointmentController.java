@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -29,7 +30,7 @@ public class AppointmentController {
             @RequestParam(required = false) Long petId,
             @RequestParam(required = false) Long veterinarianId,
             @RequestParam(required = false) String status,
-            @RequestParam(required = false) LocalDate date,
+            @RequestParam(required = false) LocalDateTime date,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size
     ) {

@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -97,7 +98,7 @@ public class VeterinarianService {
     }
 
     // obtener citas de un veterinario
-    public List<AppointmentDto> findAllAppointmentsByVeterinarian(Long veterinarianId, LocalDate date, String status) {
+    public List<AppointmentDto> findAllAppointmentsByVeterinarian(Long veterinarianId, LocalDateTime date, String status) {
 
         var veterinarian = findEntityById(veterinarianId);
         var appointments = appointmentService.findAllByVeterinarian(veterinarian);
@@ -111,7 +112,7 @@ public class VeterinarianService {
                 .toList();
     }
 
-    public List<Appointment> filterByDate(LocalDate date, List<Appointment> appointments) {
+    public List<Appointment> filterByDate(LocalDateTime date, List<Appointment> appointments) {
         return appointments.stream()
                 .filter(appointment -> appointment.getDate().isEqual(date))
                 .toList();

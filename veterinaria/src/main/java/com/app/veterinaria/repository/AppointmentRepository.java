@@ -7,14 +7,19 @@ import com.app.veterinaria.entity.enums.AppointmentStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
-    List<Appointment> findAllByDate(LocalDate date);
+    List<Appointment> findAllByDate(LocalDateTime date);
 
     List<Appointment> findAllByStatus(AppointmentStatus status);
 
     List<Appointment> findAllByVeterinarian(Veterinarian veterinarian);
 
     List<Appointment> findAllByPet(Pet pet);
+
+    boolean existsByDateAndVeterinarian(LocalDateTime date, Veterinarian veterinarian);
+
+    boolean existsByDateAndPet(LocalDateTime date, Pet pet);
 }

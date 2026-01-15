@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -33,7 +35,7 @@ public class Appointment {
     private Veterinarian veterinarian;
 
     @Column(nullable = false)
-    private LocalDate date;
+    private LocalDateTime date;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -45,8 +47,8 @@ public class Appointment {
     @Column
     private String notes;
 
-    public Appointment(LocalDate date, Pet pet, Veterinarian veterinarian) {
-        this.date = date;
+    public Appointment(LocalDateTime date, Pet pet, Veterinarian veterinarian) {
+        this.date = date.truncatedTo(ChronoUnit.MINUTES);
         this.pet = pet;
         this.veterinarian = veterinarian;
         this.status = AppointmentStatus.SCHEDULED;

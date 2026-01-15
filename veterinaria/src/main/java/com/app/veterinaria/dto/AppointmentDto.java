@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,7 +22,7 @@ public class AppointmentDto {
     private Long id;
     private String petName;
     private String veterinarianName;
-    private LocalDate date;
+    private LocalDateTime date;
     private AppointmentStatus status;
     private String ownerName;
     private String reason;

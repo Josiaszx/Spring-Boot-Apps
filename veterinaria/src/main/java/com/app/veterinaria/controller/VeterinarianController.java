@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -31,7 +32,7 @@ public class VeterinarianController {
     public List<AppointmentDto> findAllAppointmentsByVeterinarian(
             @PathVariable Long id,
             @RequestParam(required = false) String status,
-            @RequestParam(required = false) LocalDate date
+            @RequestParam(required = false) LocalDateTime date
     ) {
         return veterinarianService.findAllAppointmentsByVeterinarian(id, date, status);
     }
