@@ -35,11 +35,8 @@ public class OwnerService {
 
     // actualizar perfil (requiere rol: ADMIN u OWNER(si es su propio perfil))
     public Owner update(Long id, Owner owner) {
-        var ownerEntity = ownerRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Owner not found"));
-
+        var ownerEntity = findById(id);
         ownerEntity.updateOwner(owner);
-
         return ownerRepository.save(ownerEntity);
     }
 
