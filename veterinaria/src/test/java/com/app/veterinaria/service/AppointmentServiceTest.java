@@ -6,6 +6,7 @@ import com.app.veterinaria.entity.Appointment;
 import com.app.veterinaria.entity.Owner;
 import com.app.veterinaria.entity.Pet;
 import com.app.veterinaria.entity.Veterinarian;
+import com.app.veterinaria.exception.ResourceNotFoundException;
 import com.app.veterinaria.repository.AppointmentRepository;
 import com.app.veterinaria.repository.VeterinarianRepository;
 import org.junit.jupiter.api.BeforeEach;

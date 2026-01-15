@@ -4,6 +4,7 @@ import com.app.veterinaria.dto.AppointmentDto;
 import com.app.veterinaria.dto.NewVeterinarianRequest;
 import com.app.veterinaria.dto.VeterinarianDto;
 import com.app.veterinaria.entity.*;
+import com.app.veterinaria.exception.DuplicateResourceException;
 import com.app.veterinaria.repository.VeterinarianRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,14 +18,13 @@ import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static com.app.veterinaria.entity.enums.AppointmentStatus.*;
 import static java.util.Optional.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -108,20 +108,26 @@ class VeterinarianServiceTest {
 
     @Test
     @DisplayName("Crear y guardar veterinario correctamente")
-    void createAndSaveVeterinarian() {
+    void saveFromRequest() {
         when(userService.createAndSaveUser(request)).thenReturn(user);
         when(veterinarianRepository.save(veterinarian)).thenReturn(veterinarian);
 
-        Veterinarian result = veterinarianService.createAndSaveVeterinarian(request);
+        Veterinarian result = veterinarianService.saveFromRequest(request);
         assertEquals(veterinarian, result);
+    }
+    @Test
+    @DisplayName("Crear y guardar veterinario correctamente")
+    void validateNewVeterinarianThrowException() {
+        when(veterinarianRepository.existsByLicenseNumber(anyString())).thenReturn(true);
+        assertThrows(DuplicateResourceException.class, () -> veterinarianService.validateNewVeterinarian("123"));
     }
 
     @Test
     @DisplayName("Crear veterinario correctamente con response")
     void createAndSaveVeterinarianWithResponse() {
-        when(veterinarianService.createAndSaveVeterinarian(request)).thenReturn(veterinarian);
+        when(veterinarianService.saveFromRequest(request)).thenReturn(veterinarian);
 
-        var expectedResponseBody = new HashMap<String, Object>();
+        var expectedResponseBody = new LinkedHashMap<String, Object>();
         expectedResponseBody.put("message", "Veterinario creado exitosamente");
         expectedResponseBody.put("status", HttpStatus.CREATED.value() + " " + HttpStatus.CREATED.getReasonPhrase());
         expectedResponseBody.put("path", "/api/users/veterinarian");
@@ -265,9 +271,9 @@ class VeterinarianServiceTest {
         when(veterinarianRepository.findById(2L)).thenReturn(of(vet2));
         when(veterinarianRepository.findById(3L)).thenReturn(of(vet3));
 
-        when(appointmentService.findAllByVeterianrian(vet1)).thenReturn(vet1Appointments);
-        when(appointmentService.findAllByVeterianrian(vet2)).thenReturn(vet2Appointments);
-        when(appointmentService.findAllByVeterianrian(vet3)).thenReturn(vet3Appointments);
+        when(appointmentService.findAllByVeterinarian(vet1)).thenReturn(vet1Appointments);
+        when(appointmentService.findAllByVeterinarian(vet2)).thenReturn(vet2Appointments);
+        when(appointmentService.findAllByVeterinarian(vet3)).thenReturn(vet3Appointments);
 
         // esperar que se retornen todas los citas del veterinario 1
         var expectedResult = getAppointmentsDto(vet1Appointments);
@@ -287,111 +293,33 @@ class VeterinarianServiceTest {
 
     // obtener lista de veterinarios en VeterinarianDto para pruebas
     List<VeterinarianDto> getVeterinariansDto() {
-        VeterinarianDto veterinario1 = VeterinarianDto.builder()
-                .firstName("Carlos")
-                .lastName("González")
-                .specialty("Doctor")
-                .licenseNumber("LIC-1")
-                .email("carlos.gonzalez@vetclinic.com")
-                .build();
-
-        VeterinarianDto veterinario2 = VeterinarianDto.builder()
-                .firstName("Ana")
-                .lastName("Martínez")
-                .specialty("Doctor")
-                .licenseNumber("LIC-1")
-                .email("ana.martinez@vetclinic.com")
-                .build();
-
-        VeterinarianDto veterinario3 = VeterinarianDto.builder()
-                .firstName("Roberto")
-                .lastName("López")
-                .specialty("Cirujano")
-                .licenseNumber("LIC-1")
-                .email("roberto.lopez@vetclinic.com")
-                .build();
-
-        VeterinarianDto veterinario4 = VeterinarianDto.builder()
-                .firstName("María")
-                .lastName("Rodríguez")
-                .specialty("Cirujano")
-                .licenseNumber("LIC-1")
-                .email("maria.rodriguez@vetclinic.com")
-                .build();
-
-        VeterinarianDto veterinario5 = VeterinarianDto.builder()
-                .firstName("Luis")
-                .lastName("Fernández")
-                .specialty("Enfermero")
-                .licenseNumber("LIC-1")
-                .email("luis.fernandez@vetclinic.com")
-                .build();
-
-        VeterinarianDto veterinario6 = VeterinarianDto.builder()
-                .firstName("Sofía")
-                .lastName("Pérez")
-                .specialty("Enfermero")
-                .licenseNumber("LIC-1")
-                .email("sofia.perez@vetclinic.com")
-                .build();
-
+        VeterinarianDto veterinario1 = VeterinarianDto.builder().firstName("Carlos").lastName("González").specialty("Doctor").licenseNumber("LIC-1").email("carlos.gonzalez@vetclinic.com").build();
+        VeterinarianDto veterinario2 = VeterinarianDto.builder().firstName("Ana").lastName("Martínez").specialty("Doctor").licenseNumber("LIC-1").email("ana.martinez@vetclinic.com").build();
+        VeterinarianDto veterinario3 = VeterinarianDto.builder().firstName("Roberto").lastName("López").specialty("Cirujano").licenseNumber("LIC-1").email("roberto.lopez@vetclinic.com").build();
+        VeterinarianDto veterinario4 = VeterinarianDto.builder().firstName("María").lastName("Rodríguez").specialty("Cirujano").licenseNumber("LIC-1").email("maria.rodriguez@vetclinic.com").build();
+        VeterinarianDto veterinario5 = VeterinarianDto.builder().firstName("Luis").lastName("Fernández").specialty("Enfermero").licenseNumber("LIC-1").email("luis.fernandez@vetclinic.com").build();
+        VeterinarianDto veterinario6 = VeterinarianDto.builder().firstName("Sofía").lastName("Pérez").specialty("Enfermero").licenseNumber("LIC-1").email("sofia.perez@vetclinic.com").build();
         return List.of(veterinario1, veterinario2, veterinario3, veterinario4, veterinario5, veterinario6);
     }
 
     // obtener lista de veterinarios para pruebas
     List<Veterinarian> getVeterinarians() {
-        Veterinarian veterinario1 = Veterinarian.builder()
-                .firstName("Carlos")
-                .lastName("González")
-                .specialty("Doctor")
-                .licenseNumber("LIC-1")
-                .user((new User()))
-                .build();
+        Veterinarian veterinario1 = Veterinarian.builder().firstName("Carlos").lastName("González").specialty("Doctor").licenseNumber("LIC-1").user((new User())).build();
         veterinario1.getUser().setEmail("carlos.gonzalez@vetclinic.com");
 
-        Veterinarian veterinario2 = Veterinarian.builder()
-                .firstName("Ana")
-                .lastName("Martínez")
-                .specialty("Doctor")
-                .licenseNumber("LIC-1")
-                .user(new User())
-                .build();
+        Veterinarian veterinario2 = Veterinarian.builder().firstName("Ana").lastName("Martínez").specialty("Doctor").licenseNumber("LIC-1").user(new User()).build();
         veterinario2.getUser().setEmail("ana.martinez@vetclinic.com");
 
-        Veterinarian veterinario3 = Veterinarian.builder()
-                .firstName("Roberto")
-                .lastName("López")
-                .specialty("Cirujano")
-                .licenseNumber("LIC-1")
-                .user(new User())
-                .build();
+        Veterinarian veterinario3 = Veterinarian.builder().firstName("Roberto").lastName("López").specialty("Cirujano").licenseNumber("LIC-1").user(new User()).build();
         veterinario3.getUser().setEmail("roberto.lopez@vetclinic.com");
 
-        Veterinarian veterinario4 = Veterinarian.builder()
-                .firstName("María")
-                .lastName("Rodríguez")
-                .specialty("Cirujano")
-                .licenseNumber("LIC-1")
-                .user(new User())
-                .build();
+        Veterinarian veterinario4 = Veterinarian.builder().firstName("María").lastName("Rodríguez").specialty("Cirujano").licenseNumber("LIC-1").user(new User()).build();
         veterinario4.getUser().setEmail("maria.rodriguez@vetclinic.com");
 
-        Veterinarian veterinario5 = Veterinarian.builder()
-                .firstName("Luis")
-                .lastName("Fernández")
-                .specialty("Enfermero")
-                .licenseNumber("LIC-1")
-                .user(new User())
-                .build();
+        Veterinarian veterinario5 = Veterinarian.builder().firstName("Luis").lastName("Fernández").specialty("Enfermero").licenseNumber("LIC-1").user(new User()).build();
         veterinario5.getUser().setEmail("luis.fernandez@vetclinic.com");
 
-        Veterinarian veterinario6 = Veterinarian.builder()
-                .firstName("Sofía")
-                .lastName("Pérez")
-                .specialty("Enfermero")
-                .licenseNumber("LIC-1")
-                .user(new User())
-                .build();
+        Veterinarian veterinario6 = Veterinarian.builder().firstName("Sofía").lastName("Pérez").specialty("Enfermero").licenseNumber("LIC-1").user(new User()).build();
         veterinario6.getUser().setEmail("sofia.perez@vetclinic.com");
 
         return List.of(veterinario1, veterinario2, veterinario3, veterinario4, veterinario5, veterinario6);

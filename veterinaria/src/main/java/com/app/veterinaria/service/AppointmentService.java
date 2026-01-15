@@ -3,14 +3,15 @@ package com.app.veterinaria.service;
 import com.app.veterinaria.dto.AppointmentDto;
 import com.app.veterinaria.dto.NewAppointmentRequest;
 import com.app.veterinaria.entity.Appointment;
-import com.app.veterinaria.entity.Pet;
 import com.app.veterinaria.entity.Veterinarian;
 import com.app.veterinaria.entity.enums.AppointmentStatus;
+import com.app.veterinaria.exception.ResourceNotFoundException;
 import com.app.veterinaria.repository.AppointmentRepository;
 import com.app.veterinaria.repository.VeterinarianRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -27,12 +28,12 @@ public class AppointmentService {
     final private VeterinarianRepository veterinarianRepository;
     public Veterinarian getVeterinarianById(Long id) {
         return veterinarianRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Veterinarian not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Veterinarian not found with id: " + id));
     }
 
 
     // listar citas segun id de veterinario
-    public List<Appointment> findAllByVeterianrian(Veterinarian veterinarian) {
+    public List<Appointment> findAllByVeterinarian(Veterinarian veterinarian) {
         return appointmentRepository.findAllByVeterinarian(veterinarian);
     }
 
@@ -153,7 +154,12 @@ public class AppointmentService {
     // obtner por id
     public Appointment findById(Long id) {
         return appointmentRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Appointment not found with id: " + id));
+                .orElseThrow(() -> {
+                    var error = new ResourceNotFoundException("Appointment not found with id: " + id);
+                    error.setMethod(HttpMethod.GET);
+                    error.setPath("api/appointments/" + id);
+                    return error;
+                });
     }
 
     public AppointmentDto updateStatus(Long id, AppointmentStatus status) {

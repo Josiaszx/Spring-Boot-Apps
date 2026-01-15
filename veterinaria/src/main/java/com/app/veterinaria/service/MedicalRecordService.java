@@ -6,8 +6,10 @@ import com.app.veterinaria.dto.PetDto;
 import com.app.veterinaria.dto.VeterinarianDto;
 import com.app.veterinaria.entity.Appointment;
 import com.app.veterinaria.entity.MedicalRecord;
+import com.app.veterinaria.exception.ResourceNotFoundException;
 import com.app.veterinaria.repository.MedicalRecordRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,7 +45,12 @@ public class MedicalRecordService {
     // OBTENER EXPEDIENTE MEDICO POR ID
     public MedicalRecord findById(Long id) {
         return medicalRecordRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Medical Record not found"));
+                .orElseThrow(() -> {
+                    var error = new ResourceNotFoundException("Medical Record not found whith id: " + id);
+                    error.setMethod(HttpMethod.GET);
+                    error.setPath("api/medical-records/" + id);
+                    return error;
+                });
     }
 
     // OBTNER EXPEDIENTES MEDICOS POR ID DE MASCOTA

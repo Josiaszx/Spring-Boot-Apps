@@ -2,12 +2,12 @@ package com.app.veterinaria.service;
 
 import com.app.veterinaria.dto.NewPetRequest;
 import com.app.veterinaria.dto.PetDto;
-import com.app.veterinaria.entity.Owner;
 import com.app.veterinaria.entity.Pet;
+import com.app.veterinaria.exception.ResourceNotFoundException;
 import com.app.veterinaria.repository.PetRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -54,24 +54,26 @@ public class PetService {
                 .toList();
     }
 
-    // ver mascota por id
-    public PetDto findById(Long petId) {
-        var pet = petRepository.findById(petId)
-                .orElseThrow(() -> new IllegalArgumentException("Pet not found"));
+    // ver dto de mascota por id
+    public PetDto getDtoWithId(Long petId) {
+        var pet = findEntityById(petId);
         return new PetDto(pet);
     }
 
     // retornar entidad mascota por id
     public Pet findEntityById(Long petId) {
         return petRepository.findById(petId)
-                .orElseThrow(() -> new IllegalArgumentException("Pet not found"));
+                .orElseThrow(() -> {
+                    var error = new ResourceNotFoundException("Pet not found with id: " + petId);
+                    error.setMethod(HttpMethod.GET);
+                    error.setPath("api/pets/" + petId);
+                    return error;
+                });
     }
 
     // actualizar mascota
     public PetDto update(Long petId, Pet newPet) {
-        var pet = petRepository.findById(petId)
-                .orElseThrow(() -> new IllegalArgumentException("Pet not found"));
-
+        var pet = findEntityById(petId);
         pet.updatePet(newPet);
         return new PetDto(petRepository.save(pet));
     }

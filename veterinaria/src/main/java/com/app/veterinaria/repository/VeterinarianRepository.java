@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface VeterinarianRepository extends JpaRepository<Veterinarian, Long> {
     List<Veterinarian> findAllBySpecialty(String specialty);
+
+    boolean existsByLicenseNumber(String licenseNumber);
 }

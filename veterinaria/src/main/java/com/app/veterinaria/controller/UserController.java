@@ -28,9 +28,9 @@ public class UserController {
 
     // TODO: obtener username desde Authentication
     @GetMapping("/me")
-    public User getProfile() {
+    public User findByUsername() {
         String username = null;
-        return userService.getProfile(username);
+        return userService.findByUsername(username);
     }
 
 

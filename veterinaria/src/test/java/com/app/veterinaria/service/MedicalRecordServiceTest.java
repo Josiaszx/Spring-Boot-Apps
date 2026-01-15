@@ -6,6 +6,7 @@ import com.app.veterinaria.entity.Appointment;
 import com.app.veterinaria.entity.MedicalRecord;
 import com.app.veterinaria.entity.Pet;
 import com.app.veterinaria.entity.Veterinarian;
+import com.app.veterinaria.exception.ResourceNotFoundException;
 import com.app.veterinaria.repository.MedicalRecordRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -99,7 +100,7 @@ class MedicalRecordServiceTest {
     @DisplayName("Lanzar error si el id es invalido")
     void findByIdNotFound() {
         when(medicalRecordRepository.findById(1L)).thenReturn(Optional.empty());
-        assertThrows(IllegalArgumentException.class, () -> medicalRecordService.findById(1L));
+        assertThrows(ResourceNotFoundException.class, () -> medicalRecordService.findById(1L));
     }
 
     @Test

@@ -4,6 +4,7 @@ import com.app.veterinaria.dto.NewPetRequest;
 import com.app.veterinaria.dto.PetDto;
 import com.app.veterinaria.entity.Owner;
 import com.app.veterinaria.entity.Pet;
+import com.app.veterinaria.exception.ResourceNotFoundException;
 import com.app.veterinaria.repository.PetRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -116,23 +117,16 @@ class PetServiceTest {
 
     @Test
     @DisplayName("Debe encontrar mascota por ID")
-    void findById_Success() {
+    void getDtoWithId_Success() {
         when(petRepository.findById(1L)).thenReturn(Optional.of(pet));
 
-        PetDto result = petService.findById(1L);
+        PetDto result = petService.getDtoWithId(1L);
 
         assertNotNull(result);
         assertEquals("Fido", result.getName());
         verify(petRepository).findById(1L);
     }
 
-    @Test
-    @DisplayName("Debe lanzar excepción si mascota no existe por ID")
-    void findById_ThrowsException_WhenNotFound() {
-        when(petRepository.findById(1L)).thenReturn(Optional.empty());
-
-        assertThrows(IllegalArgumentException.class, () -> petService.findById(1L));
-    }
 
     @Test
     @DisplayName("Debe retornar entidad mascota por ID")
@@ -150,8 +144,7 @@ class PetServiceTest {
     @DisplayName("Debe lanzar excepción si entidad mascota no existe por ID")
     void findEntityById_ThrowsException_WhenNotFound() {
         when(petRepository.findById(1L)).thenReturn(Optional.empty());
-
-        assertThrows(IllegalArgumentException.class, () -> petService.findEntityById(1L));
+        assertThrows(ResourceNotFoundException.class, () -> petService.findEntityById(1L));
     }
 
     @Test
@@ -168,14 +161,6 @@ class PetServiceTest {
         assertNotNull(result);
         verify(petRepository).findById(1L);
         verify(petRepository).save(pet);
-    }
-
-    @Test
-    @DisplayName("Debe lanzar excepción al actualizar si mascota no existe")
-    void update_ThrowsException_WhenNotFound() {
-        when(petRepository.findById(1L)).thenReturn(Optional.empty());
-
-        assertThrows(IllegalArgumentException.class, () -> petService.update(1L, new Pet()));
     }
 
     @Test

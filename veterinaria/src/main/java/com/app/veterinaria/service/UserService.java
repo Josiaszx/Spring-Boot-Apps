@@ -3,8 +3,11 @@ package com.app.veterinaria.service;
 import com.app.veterinaria.dto.AnyEntityRequest;
 import com.app.veterinaria.entity.Role;
 import com.app.veterinaria.entity.User;
+import com.app.veterinaria.exception.DuplicateResourceException;
+import com.app.veterinaria.exception.ResourceNotFoundException;
 import com.app.veterinaria.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,6 +43,8 @@ public class UserService{
 
     // guardar usuario
     public User save(User user) {
+        if (userRepository.existsByEmail(user.getEmail())) throw new DuplicateResourceException("The email is already registered", "");
+        if (userRepository.existsByUsername(user.getUsername())) throw new DuplicateResourceException("The username is already registered", "");
         return userRepository.save(user);
     }
 
@@ -47,7 +52,11 @@ public class UserService{
     // buscar usuario por id
     public User findById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found for this id: " + id));
+                .orElseThrow(() -> {
+                    var error = new ResourceNotFoundException("User not found with id: " + id);
+                    error.setPath("api/users/" + id);
+                    return error;
+                });
     }
 
     // mostrar todos los usuarios segun su rol
@@ -55,9 +64,13 @@ public class UserService{
         return userRepository.findAll();
     }
 
-    public User getProfile(String username) {
+    public User findByUsername(String username) {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found for this username: " + username));
+                .orElseThrow(() -> {
+                    var error = new ResourceNotFoundException("User not found with username: " + username);
+                    error.setPath("api/users/me");
+                    return error;
+                });
     }
 
 

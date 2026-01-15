@@ -5,7 +5,6 @@ import com.app.veterinaria.dto.PetDto;
 import com.app.veterinaria.entity.Pet;
 import com.app.veterinaria.service.PetService;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +29,7 @@ public class PetController {
 
     @GetMapping("/{id}")
     public PetDto findById(@PathVariable Long id) {
-        return petService.findById(id);
+        return petService.getDtoWithId(id);
     }
 
     @PutMapping("/{id}")

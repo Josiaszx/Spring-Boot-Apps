@@ -6,7 +6,6 @@ import com.app.veterinaria.entity.enums.AppointmentStatus;
 import com.app.veterinaria.service.AppointmentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
