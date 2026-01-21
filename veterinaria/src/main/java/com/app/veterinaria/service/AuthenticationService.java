@@ -52,4 +52,15 @@ public class AuthenticationService {
 
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
+
+    public String getUserRole() {
+        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList()
+                .getFirst();
+    }
+
+    public String getUsername() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
 }

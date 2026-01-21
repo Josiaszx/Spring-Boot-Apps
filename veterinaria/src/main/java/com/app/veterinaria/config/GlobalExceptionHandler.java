@@ -1,6 +1,7 @@
 package com.app.veterinaria.config;
 
 import com.app.veterinaria.exception.DuplicateResourceException;
+import com.app.veterinaria.exception.InvalidOperationException;
 import com.app.veterinaria.exception.ResourceNotFoundException;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleDuplicateResourceException(DuplicateResourceException ex) {
         var body = generateResponseBody(ex.getTimestamp(), ex.getStatus(), ex.getMessage(), ex.getPath(), ex.getMethod());
         return new ResponseEntity<>(body, BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidOperationException.class)
+    public ResponseEntity<?> handleInvalidOperationException(InvalidOperationException ex) {
+        var body = generateResponseBody(ex.getTimestamp(), ex.getSTATUS(), ex.getMessage(), ex.getPath(), ex.getHttpMethod());
+        return new ResponseEntity<>(body, ex.getSTATUS());
     }
 
     @ExceptionHandler(AuthenticationException.class)

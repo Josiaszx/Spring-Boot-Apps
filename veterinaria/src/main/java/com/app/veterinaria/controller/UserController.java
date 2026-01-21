@@ -7,7 +7,10 @@ import com.app.veterinaria.service.VeterinarianService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.LinkedHashMap;
 
 /*
     CLASE DE ACCESO UNICO MEDIANTE ROL DE ADMIN
@@ -26,11 +29,18 @@ public class UserController {
         return veterinarianService.createAndSaveVeterinarianWithResponse(request);
     }
 
-    // TODO: obtener username desde Authentication
+
     @GetMapping("/me")
-    public User findByUsername() {
-        String username = null;
-        return userService.findByUsername(username);
+    public ResponseEntity<?> findByUsername(Authentication authentication) {
+        String username = authentication.getName();
+        var user = userService.findByUsername(username);
+        var body = new LinkedHashMap<String, Object>();
+        body.put("username", user.getUsername());
+        body.put("email", user.getEmail());
+        body.put("role", user.getRole().getAuthority());
+        body.put("createdAt", user.getCreatedAt());
+
+        return ResponseEntity.ok(body);
     }
 
 

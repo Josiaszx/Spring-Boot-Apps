@@ -2,6 +2,7 @@ package com.app.veterinaria.service;
 
 import com.app.veterinaria.dto.NewOwnerRequest;
 import com.app.veterinaria.entity.Owner;
+import com.app.veterinaria.entity.User;
 import com.app.veterinaria.exception.DuplicateResourceException;
 import com.app.veterinaria.exception.ResourceNotFoundException;
 import com.app.veterinaria.repository.OwnerRepository;
@@ -56,5 +57,22 @@ public class OwnerService {
         var user = userService.createAndSaveUser(ownerRequest);
         var owner = new Owner(ownerRequest, user);
         return ownerRepository.save(owner);
+    }
+
+    public Owner findByUser(User user) {
+        if (user == null) throw new IllegalArgumentException("User can not be null");
+        return ownerRepository.findByUser(user)
+                .orElseThrow(() -> {
+                    var error = new ResourceNotFoundException("Owner not found with user: " + user.getUsername());
+                    error.setMethod(HttpMethod.GET);
+                    error.setPath("api/owners");
+                    return error;
+                });
+    }
+
+    public Owner findOwnerByUsername(String username) {
+        if (username == null) throw new IllegalArgumentException("Username can not be null");
+        User user = userService.findByUsername(username);
+        return findByUser(user);
     }
 }

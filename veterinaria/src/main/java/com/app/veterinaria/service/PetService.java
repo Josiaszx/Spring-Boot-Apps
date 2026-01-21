@@ -2,6 +2,7 @@ package com.app.veterinaria.service;
 
 import com.app.veterinaria.dto.NewPetRequest;
 import com.app.veterinaria.dto.PetDto;
+import com.app.veterinaria.entity.Owner;
 import com.app.veterinaria.entity.Pet;
 import com.app.veterinaria.exception.ResourceNotFoundException;
 import com.app.veterinaria.repository.PetRepository;
@@ -20,17 +21,7 @@ public class PetService {
 
     // registrar mascota (roles: VETERINARIAN, ADMIN y OWNER)
     public PetDto save(NewPetRequest request) {
-        // si el usuario tiene rol OWNER, asignar automaticamente la mascota al owner logueado
-        // ...
-
-
-        // si no, requerir el id en body de la request
-        var ownerId = request.getOwnerId();
-        if (ownerId == null) {
-            throw new IllegalArgumentException("El ID del dueño es obligatorio");
-        }
-
-        var owner = ownerService.findById(ownerId);
+        var owner = ownerService.findById(request.getOwnerId());
         var pet = new Pet(request, owner);
         pet = petRepository.save(pet);
         return new PetDto(pet);
@@ -81,5 +72,10 @@ public class PetService {
     // eliminar mascota
     public void delete(Long petId) {
         petRepository.deleteById(petId);
+    }
+
+    // obtener dueño de la mascota
+    public Owner getOwner(Long petId) {
+        return findEntityById(petId).getOwner();
     }
 }
