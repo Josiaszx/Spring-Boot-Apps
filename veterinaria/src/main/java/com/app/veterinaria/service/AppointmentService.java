@@ -4,6 +4,7 @@ import com.app.veterinaria.dto.AppointmentDto;
 import com.app.veterinaria.dto.NewAppointmentRequest;
 import com.app.veterinaria.entity.Appointment;
 import com.app.veterinaria.entity.Pet;
+import com.app.veterinaria.entity.User;
 import com.app.veterinaria.entity.Veterinarian;
 import com.app.veterinaria.entity.enums.AppointmentStatus;
 import com.app.veterinaria.exception.InvalidOperationException;
@@ -191,4 +192,6 @@ public class AppointmentService {
             throw new InvalidOperationException("Pet already has an appointment on that date", "api/appointments");
         }
     }
+
+
 }

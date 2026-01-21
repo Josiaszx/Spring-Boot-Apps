@@ -3,12 +3,15 @@ package com.app.veterinaria.controller;
 import com.app.veterinaria.dto.AppointmentDto;
 import com.app.veterinaria.dto.NewAppointmentRequest;
 import com.app.veterinaria.entity.enums.AppointmentStatus;
+import com.app.veterinaria.exception.InvalidOperationException;
 import com.app.veterinaria.service.AppointmentService;
+import com.app.veterinaria.service.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -18,6 +21,7 @@ import java.util.List;
 public class AppointmentController {
 
     final private AppointmentService appointmentService;
+    private final AuthenticationService authenticationService;
 
 
     @PostMapping
@@ -39,6 +43,9 @@ public class AppointmentController {
 
     @GetMapping("/{id}")
     public AppointmentDto findById(@PathVariable Long id) {
+        var userRole = authenticationService.getUserRole();
+        if (userRole.equals("OWNER")) checkIfTheUserHasTheAppointment(id);
+
         return new AppointmentDto(appointmentService.findById(id));
     }
 
@@ -50,5 +57,16 @@ public class AppointmentController {
     @DeleteMapping("/{id}")
     public void delete(Long id) {
         appointmentService.deleteById(id);
+    }
+
+    public void checkIfTheUserHasTheAppointment(Long appointmentId) {
+        var loggedInUsername = authenticationService.getUsername();
+        var foundUsername = appointmentService.findById(appointmentId).getPet().getOwner().getUser().getUsername();
+        if (!loggedInUsername.equals(foundUsername)) {
+            var error = new InvalidOperationException("You can not see this appointment");
+            error.setPath("api/appointments/" + appointmentId);
+            error.setHttpMethod(HttpMethod.GET);
+            throw error;
+        }
     }
 }

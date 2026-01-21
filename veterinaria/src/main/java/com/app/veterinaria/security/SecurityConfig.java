@@ -37,6 +37,8 @@ public class SecurityConfig {
                     request.requestMatchers(POST, "/api/users/veterinarians").hasAuthority("ADMIN");
                     request.requestMatchers("/api/owners").hasAnyAuthority("ADMIN", "VETERINARIAN");
                     request.requestMatchers("/api/owners/**").hasAnyAuthority("ADMIN", "VETERINARIAN");
+                    request.requestMatchers(GET, "/api/appointments/{id}").hasAnyAuthority("ADMIN", "VETERINARIAN", "OWNER");
+                    request.requestMatchers( "/api/appointments/**").hasAnyAuthority("ADMIN", "VETERINARIAN");
                     request.anyRequest().authenticated();
                 })
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
