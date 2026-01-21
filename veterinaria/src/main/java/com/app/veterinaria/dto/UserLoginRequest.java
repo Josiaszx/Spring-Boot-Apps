@@ -1,4 +1,4 @@
-package com.app.veterinaria.security;
+package com.app.veterinaria.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

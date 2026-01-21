@@ -50,4 +50,17 @@ public class User {
         this.createdAt = newEntityRequest.getCreatedAt() == null ? LocalDate.now() : newEntityRequest.getCreatedAt();
         this.role = role;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", role=" + role +
+                ", active=" + active +
+                ", createdAt=" + createdAt +
+                '}';
+    }
 }

@@ -2,6 +2,8 @@ package com.app.veterinaria.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.jspecify.annotations.Nullable;
+import org.springframework.security.core.GrantedAuthority;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -10,7 +12,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Data
 @Entity
 @Table(name = "roles")
-public class Role {
+public class Role implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -23,4 +25,9 @@ public class Role {
         this.role = role;
     }
 
+
+    @Override
+    public @Nullable String getAuthority() {
+        return role;
+    }
 }

@@ -5,12 +5,12 @@ import com.app.veterinaria.exception.ResourceNotFoundException;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import static org.springframework.http.HttpStatus.*;
@@ -20,13 +20,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<?> handleResourceNotFoundException(ResourceNotFoundException ex) {
-        var response = generateResponse(ex.getTimestamp(), ex.getSTATUS_CODE(), ex.getMessage(), ex.getPath(), ex.getMethod());
+        var response = generateResponseBody(ex.getTimestamp(), ex.getSTATUS_CODE(), ex.getMessage(), ex.getPath(), ex.getMethod());
         return ResponseEntity.status(ex.getSTATUS_CODE()).body(response);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException ex) {
-        var body = generateResponse(
+        var body = generateResponseBody(
                 LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS), BAD_REQUEST,
                 BAD_REQUEST.getReasonPhrase(), ex.getMessage(), HttpMethod.GET
         );
@@ -35,11 +35,18 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DuplicateResourceException.class)
     public ResponseEntity<?> handleDuplicateResourceException(DuplicateResourceException ex) {
-        var body = generateResponse(ex.getTimestamp(), ex.getStatus(), ex.getMessage(), ex.getPath(), ex.getMethod());
+        var body = generateResponseBody(ex.getTimestamp(), ex.getStatus(), ex.getMessage(), ex.getPath(), ex.getMethod());
         return new ResponseEntity<>(body, BAD_REQUEST);
     }
 
-    private LinkedHashMap<String, Object> generateResponse(LocalDateTime timestamp, HttpStatus status, String message, String path, HttpMethod method) {
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<?> handleAuthenticationException(AuthenticationException ex) {
+        var timestamp = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+        var body = generateResponseBody(timestamp, UNAUTHORIZED, ex.getMessage(), "/api/auth/login", HttpMethod.POST);
+        return new ResponseEntity<>(body, UNAUTHORIZED);
+    }
+
+    private LinkedHashMap<String, Object> generateResponseBody(LocalDateTime timestamp, HttpStatus status, String message, String path, HttpMethod method) {
         var response = new LinkedHashMap<String, Object>();
         response.put("timestamp", timestamp);
         response.put("status Code", status);
