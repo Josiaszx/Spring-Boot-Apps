@@ -1,13 +1,12 @@
-package com.app.veterinaria.dto;
+package com.app.veterinaria.dto.request;
 
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class NewOwnerRequest extends EntityRequest{
+public class NewOwnerRequest extends EntityRequest {
     private String phoneNumber;
     private String address;
 }

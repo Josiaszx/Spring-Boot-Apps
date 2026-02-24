@@ -1,6 +1,6 @@
 package com.app.veterinaria.service;
 
-import com.app.veterinaria.dto.UserLoginRequest;
+import com.app.veterinaria.dto.request.UserLoginRequest;
 import com.app.veterinaria.security.jwt.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

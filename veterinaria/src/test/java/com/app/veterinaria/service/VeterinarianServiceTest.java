@@ -1,8 +1,8 @@
 package com.app.veterinaria.service;
 
-import com.app.veterinaria.dto.AppointmentDto;
-import com.app.veterinaria.dto.NewVeterinarianRequest;
-import com.app.veterinaria.dto.VeterinarianDto;
+import com.app.veterinaria.dto.response.AppointmentDto;
+import com.app.veterinaria.dto.request.NewVeterinarianRequest;
+import com.app.veterinaria.dto.response.VeterinarianDto;
 import com.app.veterinaria.entity.*;
 import com.app.veterinaria.exception.DuplicateResourceException;
 import com.app.veterinaria.repository.VeterinarianRepository;

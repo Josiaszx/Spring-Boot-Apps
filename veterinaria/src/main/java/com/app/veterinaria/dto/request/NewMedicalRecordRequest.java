@@ -1,4 +1,4 @@
-package com.app.veterinaria.dto;
+package com.app.veterinaria.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

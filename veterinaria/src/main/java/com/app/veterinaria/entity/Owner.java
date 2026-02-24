@@ -1,6 +1,6 @@
 package com.app.veterinaria.entity;
 
-import com.app.veterinaria.dto.NewOwnerRequest;
+import com.app.veterinaria.dto.request.NewOwnerRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

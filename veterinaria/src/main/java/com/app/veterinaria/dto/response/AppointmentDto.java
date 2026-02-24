@@ -1,16 +1,12 @@
-package com.app.veterinaria.dto;
+package com.app.veterinaria.dto.response;
 
 import com.app.veterinaria.entity.Appointment;
-import com.app.veterinaria.entity.Pet;
-import com.app.veterinaria.entity.Veterinarian;
 import com.app.veterinaria.entity.enums.AppointmentStatus;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor

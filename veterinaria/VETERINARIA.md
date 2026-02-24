@@ -248,30 +248,6 @@ Desarrollar una API REST para una clínica veterinaria que permita gestionar mas
    - Validar reglas de negocio (fechas, estados, etc.)
    - Ejemplo: No permitir citas en el pasado
 
-### Tests de Integración Requeridos
-
-1. **Controllers**:
-   - Usar `@WebMvcTest` o `@SpringBootTest`
-   - Probar endpoints con diferentes roles
-   - Verificar códigos de estado HTTP
-   - Validar responses JSON
-
-2. **Repositories**:
-   - Usar `@DataJpaTest`
-   - Probar queries personalizadas
-   - Verificar relaciones entre entidades
-
-### Casos de Prueba Específicos
-
-```java
-// Ejemplo de casos a implementar:
-- testCreatePet_Success()
-- testCreatePet_UnauthorizedUser()
-- testCreateAppointment_PastDate_ThrowsException()
-- testGetMedicalRecords_OwnerCanOnlySeTheirPets()
-- testCancelAppointment_VeterinarianCannotCancel()
-- testUpdateMedicalRecord_DifferentVeterinarian_ThrowsException()
-```
 
 ## ⚠️ Manejo de Errores
 
@@ -281,7 +257,6 @@ Desarrollar una API REST para una clínica veterinaria que permita gestionar mas
 // Jerarquía de excepciones
 - VeterinaryException (base)
   ├── ResourceNotFoundException
-  ├── UnauthorizedAccessException
   ├── InvalidOperationException
   ├── DuplicateResourceException
   └── ValidationException

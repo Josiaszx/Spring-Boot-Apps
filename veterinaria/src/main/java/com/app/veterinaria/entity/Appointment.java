@@ -1,6 +1,5 @@
 package com.app.veterinaria.entity;
 
-import com.app.veterinaria.dto.NewAppointmentRequest;
 import com.app.veterinaria.entity.enums.AppointmentStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,7 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 

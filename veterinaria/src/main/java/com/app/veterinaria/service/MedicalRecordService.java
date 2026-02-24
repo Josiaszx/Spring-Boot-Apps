@@ -1,10 +1,7 @@
 package com.app.veterinaria.service;
 
-import com.app.veterinaria.dto.MedicalRecordDto;
-import com.app.veterinaria.dto.NewMedicalRecordRequest;
-import com.app.veterinaria.dto.PetDto;
-import com.app.veterinaria.dto.VeterinarianDto;
-import com.app.veterinaria.entity.Appointment;
+import com.app.veterinaria.dto.response.MedicalRecordDto;
+import com.app.veterinaria.dto.request.NewMedicalRecordRequest;
 import com.app.veterinaria.entity.MedicalRecord;
 import com.app.veterinaria.exception.ResourceNotFoundException;
 import com.app.veterinaria.repository.MedicalRecordRepository;

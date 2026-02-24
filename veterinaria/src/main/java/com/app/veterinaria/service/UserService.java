@@ -1,13 +1,12 @@
 package com.app.veterinaria.service;
 
-import com.app.veterinaria.dto.AnyEntityRequest;
+import com.app.veterinaria.dto.request.AnyEntityRequest;
 import com.app.veterinaria.entity.Role;
 import com.app.veterinaria.entity.User;
 import com.app.veterinaria.exception.DuplicateResourceException;
 import com.app.veterinaria.exception.ResourceNotFoundException;
 import com.app.veterinaria.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

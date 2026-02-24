@@ -1,4 +1,4 @@
-package com.app.veterinaria.dto;
+package com.app.veterinaria.dto.response;
 
 import com.app.veterinaria.entity.MedicalRecord;
 import lombok.Data;

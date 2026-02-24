@@ -1,12 +1,9 @@
 package com.app.veterinaria.controller;
 
-import com.app.veterinaria.dto.NewOwnerRequest;
+import com.app.veterinaria.dto.request.NewOwnerRequest;
 import com.app.veterinaria.entity.Owner;
 import com.app.veterinaria.service.OwnerService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

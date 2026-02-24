@@ -1,8 +1,6 @@
-package com.app.veterinaria.dto;
+package com.app.veterinaria.dto.response;
 
-import com.app.veterinaria.entity.User;
 import com.app.veterinaria.entity.Veterinarian;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

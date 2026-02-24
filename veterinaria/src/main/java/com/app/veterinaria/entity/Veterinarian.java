@@ -1,6 +1,6 @@
 package com.app.veterinaria.entity;
 
-import com.app.veterinaria.dto.NewVeterinarianRequest;
+import com.app.veterinaria.dto.request.NewVeterinarianRequest;
 import jakarta.persistence.*;
 import lombok.*;
 

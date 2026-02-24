@@ -1,6 +1,6 @@
 package com.app.veterinaria.controller;
 
-import com.app.veterinaria.dto.UserLoginRequest;
+import com.app.veterinaria.dto.request.UserLoginRequest;
 import com.app.veterinaria.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

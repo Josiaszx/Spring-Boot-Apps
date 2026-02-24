@@ -1,8 +1,8 @@
 package com.app.veterinaria.service;
 
-import com.app.veterinaria.dto.AppointmentDto;
-import com.app.veterinaria.dto.NewVeterinarianRequest;
-import com.app.veterinaria.dto.VeterinarianDto;
+import com.app.veterinaria.dto.response.AppointmentDto;
+import com.app.veterinaria.dto.request.NewVeterinarianRequest;
+import com.app.veterinaria.dto.response.VeterinarianDto;
 import com.app.veterinaria.entity.Appointment;
 import com.app.veterinaria.entity.Veterinarian;
 import com.app.veterinaria.entity.enums.AppointmentStatus;
@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;

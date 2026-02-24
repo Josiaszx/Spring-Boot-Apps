@@ -1,7 +1,6 @@
 package com.app.veterinaria.controller;
 
-import com.app.veterinaria.dto.NewVeterinarianRequest;
-import com.app.veterinaria.entity.User;
+import com.app.veterinaria.dto.request.NewVeterinarianRequest;
 import com.app.veterinaria.service.UserService;
 import com.app.veterinaria.service.VeterinarianService;
 import jakarta.validation.Valid;

@@ -1,7 +1,7 @@
 package com.app.veterinaria.service;
 
-import com.app.veterinaria.dto.NewPetRequest;
-import com.app.veterinaria.dto.PetDto;
+import com.app.veterinaria.dto.request.NewPetRequest;
+import com.app.veterinaria.dto.response.PetDto;
 import com.app.veterinaria.entity.Owner;
 import com.app.veterinaria.entity.Pet;
 import com.app.veterinaria.exception.ResourceNotFoundException;

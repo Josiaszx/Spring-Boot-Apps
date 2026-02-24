@@ -1,11 +1,9 @@
-package com.app.veterinaria.dto;
+package com.app.veterinaria.dto.request;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data

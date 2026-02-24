@@ -1,13 +1,11 @@
 package com.app.veterinaria.controller;
 
-import com.app.veterinaria.dto.AppointmentDto;
-import com.app.veterinaria.dto.VeterinarianDto;
-import com.app.veterinaria.entity.Appointment;
+import com.app.veterinaria.dto.response.AppointmentDto;
+import com.app.veterinaria.dto.response.VeterinarianDto;
 import com.app.veterinaria.service.VeterinarianService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 

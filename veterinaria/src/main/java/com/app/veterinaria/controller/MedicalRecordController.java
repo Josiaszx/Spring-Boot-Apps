@@ -1,8 +1,7 @@
 package com.app.veterinaria.controller;
 
-import com.app.veterinaria.dto.MedicalRecordDto;
-import com.app.veterinaria.dto.NewMedicalRecordRequest;
-import com.app.veterinaria.dto.PetDto;
+import com.app.veterinaria.dto.response.MedicalRecordDto;
+import com.app.veterinaria.dto.request.NewMedicalRecordRequest;
 import com.app.veterinaria.service.MedicalRecordService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;

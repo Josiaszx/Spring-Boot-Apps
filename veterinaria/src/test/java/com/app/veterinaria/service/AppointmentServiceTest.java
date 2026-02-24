@@ -1,13 +1,12 @@
 package com.app.veterinaria.service;
 
-import com.app.veterinaria.dto.AppointmentDto;
-import com.app.veterinaria.dto.NewAppointmentRequest;
+import com.app.veterinaria.dto.response.AppointmentDto;
+import com.app.veterinaria.dto.request.NewAppointmentRequest;
 import com.app.veterinaria.entity.Appointment;
 import com.app.veterinaria.entity.Owner;
 import com.app.veterinaria.entity.Pet;
 import com.app.veterinaria.entity.Veterinarian;
 import com.app.veterinaria.exception.InvalidOperationException;
-import com.app.veterinaria.exception.ResourceNotFoundException;
 import com.app.veterinaria.repository.AppointmentRepository;
 import com.app.veterinaria.repository.VeterinarianRepository;
 import org.junit.jupiter.api.BeforeEach;

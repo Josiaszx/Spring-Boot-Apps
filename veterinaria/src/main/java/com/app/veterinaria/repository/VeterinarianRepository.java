@@ -1,6 +1,5 @@
 package com.app.veterinaria.repository;
 
-import com.app.veterinaria.dto.VeterinarianDto;
 import com.app.veterinaria.entity.Veterinarian;
 import org.springframework.data.jpa.repository.JpaRepository;
 

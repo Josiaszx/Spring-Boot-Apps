@@ -1,7 +1,7 @@
 package com.app.veterinaria.controller;
 
-import com.app.veterinaria.dto.NewPetRequest;
-import com.app.veterinaria.dto.PetDto;
+import com.app.veterinaria.dto.request.NewPetRequest;
+import com.app.veterinaria.dto.response.PetDto;
 import com.app.veterinaria.entity.Pet;
 import com.app.veterinaria.exception.InvalidOperationException;
 import com.app.veterinaria.service.AuthenticationService;

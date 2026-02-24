@@ -1,10 +1,9 @@
 package com.app.veterinaria.service;
 
-import com.app.veterinaria.dto.AppointmentDto;
-import com.app.veterinaria.dto.NewAppointmentRequest;
+import com.app.veterinaria.dto.response.AppointmentDto;
+import com.app.veterinaria.dto.request.NewAppointmentRequest;
 import com.app.veterinaria.entity.Appointment;
 import com.app.veterinaria.entity.Pet;
-import com.app.veterinaria.entity.User;
 import com.app.veterinaria.entity.Veterinarian;
 import com.app.veterinaria.entity.enums.AppointmentStatus;
 import com.app.veterinaria.exception.InvalidOperationException;

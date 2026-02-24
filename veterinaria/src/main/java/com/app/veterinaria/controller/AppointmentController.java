@@ -1,7 +1,7 @@
 package com.app.veterinaria.controller;
 
-import com.app.veterinaria.dto.AppointmentDto;
-import com.app.veterinaria.dto.NewAppointmentRequest;
+import com.app.veterinaria.dto.response.AppointmentDto;
+import com.app.veterinaria.dto.request.NewAppointmentRequest;
 import com.app.veterinaria.entity.enums.AppointmentStatus;
 import com.app.veterinaria.exception.InvalidOperationException;
 import com.app.veterinaria.service.AppointmentService;
@@ -9,7 +9,6 @@ import com.app.veterinaria.service.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;

@@ -1,6 +1,6 @@
 package com.app.veterinaria.service;
 
-import com.app.veterinaria.dto.NewOwnerRequest;
+import com.app.veterinaria.dto.request.NewOwnerRequest;
 import com.app.veterinaria.entity.Role;
 import com.app.veterinaria.entity.User;
 import com.app.veterinaria.repository.UserRepository;
