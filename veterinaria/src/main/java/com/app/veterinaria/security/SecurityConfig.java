@@ -10,6 +10,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,6 +34,7 @@ public class SecurityConfig {
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> {
+                    request.requestMatchers("/h2-console/**").permitAll();
                     request.requestMatchers(POST, "/api/auth/login").permitAll();
                     request.requestMatchers(POST, "/api/users/veterinarians").hasAuthority("ADMIN");
                     request.requestMatchers("/api/owners").hasAnyAuthority("ADMIN", "VETERINARIAN");
@@ -45,6 +47,8 @@ public class SecurityConfig {
                 .exceptionHandling(ex -> {
                     ex.authenticationEntryPoint(jwtAuthEntryPoint);
                 })
+                // habilitar iframe para h2-console
+                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .build();
     }
 
