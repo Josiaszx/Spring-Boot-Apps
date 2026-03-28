@@ -6,14 +6,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BookRepository extends JpaRepository<Book, Long> {
 
     // obtener libro por isbn (International Standard Book Number)
-    public Book findByIsbn(String isbn);
+    public Optional<Book> findByIsbn(String isbn);
 
     // obtener libro por su titulo
-    public Book findByTitle(String title);
+    public Optional<Book> findByTitle(String title);
 
     // obtener todos los libros disponibles
     @Query("select b from Book b where b.availableCopies > 0")

@@ -3,6 +3,7 @@ package com.empresa.biblioteca.service;
 import com.empresa.biblioteca.dto.LoanDTO;
 import com.empresa.biblioteca.dto.PostLoanDTO;
 import com.empresa.biblioteca.exception.InvalidOperationException;
+import com.empresa.biblioteca.model.Book;
 import com.empresa.biblioteca.model.Loan;
 import com.empresa.biblioteca.model.LoanStatus;
 import com.empresa.biblioteca.model.Member;
@@ -21,82 +22,75 @@ import java.util.NoSuchElementException;
 @Service
 public class LoanService {
 
-    final private BookRepository bookRepository;
     final private LoanRepository loanRepository;
-    final private MemberRepository memberRepository;
+    final private BookService bookService;
+    final private MemberService memberService;
+
     public LoanService(
-            BookRepository bookRepository,
+            BookService bookService,
             LoanRepository loanRepository,
-            MemberRepository memberRepository
+            MemberService memberService
     ) {
-        this.bookRepository = bookRepository;
+        this.bookService = bookService;
         this.loanRepository = loanRepository;
-        this.memberRepository = memberRepository;
+        this.memberService = memberService;
     }
 
-    // registrar prestamo
     public LoanDTO save(PostLoanDTO postLoanDTO) {
-
-        var book = bookRepository.findById(postLoanDTO.getBookId())
-                        .orElseThrow(() -> new NoSuchElementException("Book not found"));
-
-        var member = memberRepository.findById(postLoanDTO.getMemberId())
-                        .orElseThrow(() -> new NoSuchElementException("Member not found"));
-
-        Loan loan = new Loan(postLoanDTO, member, book);
-
+        var book = bookService.findById(postLoanDTO.getBookId());
         if (book.getAvailableCopies() == 0) throw new InvalidOperationException("Book not available");
+        var member = memberService.findById(postLoanDTO.getMemberId());
+        var loan = new Loan(postLoanDTO, member, book);
         book.setAvailableCopies(book.getAvailableCopies() - 1);
-
-        bookRepository.save(book);
+        bookService.save(book);
         loan = loanRepository.save(loan);
         return new LoanDTO(loan);
     }
 
-    // devolver libro
     public LoanDTO returnBook(Long loanId) {
-        var loan = loanRepository.findById(loanId)
-                .orElseThrow(() -> new NoSuchElementException("Loan not found"));
-
+        var loan = findById(loanId);
         if (loan.getStatus() == LoanStatus.CLOSED) throw new InvalidOperationException("Loan already closed");
-
         var book = loan.getBook();
         book.setAvailableCopies(book.getAvailableCopies() + 1);
-        bookRepository.save(book);
-
+        bookService.save(book);
         loan.setStatus(LoanStatus.CLOSED);
         loan.setReturnDate(LocalDate.now());
         loan = loanRepository.save(loan);
         return new LoanDTO(loan);
     }
 
-    // listar prestamos activos
     public Page<LoanDTO> findAllActive(Pageable pageable) {
         var loans = loanRepository.findAllByStatusIs(LoanStatus.ACTIVE, pageable);
         return loans.map(LoanDTO::new);
     }
 
-    // listar todos los prestamos vencidos
     public List<LoanDTO> findAllOverdue() {
         return toDTOList(loanRepository.findAllByStatusIs(LoanStatus.OVERDUE));
     }
 
-    // mostrar prestamo segun id
-    public LoanDTO findById(long id) {
-        var loan = loanRepository.findById(id)
+    public Loan findById(long id) {
+        return loanRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Loan not found"));
-
-        return new LoanDTO(loan);
     }
 
-    // listar todos los prestamos de un miembro
     public List<LoanDTO> findAllLoansFromOneUser(Long userId) {
-        Member member = memberRepository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException("Member not found"));
-
+        var member = memberService.findById(userId);
         return toDTOList(loanRepository.findAllByMemberIs(member));
     }
 
+    public Book findMostBorrowedBook() {
+        return loanRepository.findMostBorrowedBook();
+    }
+
+    public Member findMemberWithMostLoans() {
+        return loanRepository.findMemberWithMostLoans();
+    }
+
+    public List<LoanDTO> findAllMemberLoans(Long idUser) {
+        var member = memberService.findById(idUser);
+        var memberLoans = loanRepository.findAllByMemberIs(member);
+        return toDTOList(memberLoans);
+    }
     // ----- metodos de mappeo -----
 
     // List<Loan> a List<LoanDTO>

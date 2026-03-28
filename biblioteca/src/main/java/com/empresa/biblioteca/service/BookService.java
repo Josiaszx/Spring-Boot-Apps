@@ -1,6 +1,7 @@
 package com.empresa.biblioteca.service;
 
 import com.empresa.biblioteca.dto.BookDTO;
+import com.empresa.biblioteca.model.Author;
 import com.empresa.biblioteca.model.Book;
 import com.empresa.biblioteca.dto.PostBookDTO;
 import com.empresa.biblioteca.model.Member;
@@ -18,109 +19,72 @@ import java.util.*;
 public class BookService {
 
     private final BookRepository bookRepository;
-    private final AuthorRepository authorRepository;
-    private final CategoryRepository categoryRepository;
-    private final LoanRepository loanRepository;
+    private final AuthorService authorService;
+    private final CategoryService categoryService;
 
     public BookService(
             BookRepository bookRepository,
-            CategoryRepository categoryRepository,
-            AuthorRepository authorRepository,
-            LoanRepository loanRepository
+            CategoryService categoryService,
+            AuthorService authorService
     ) {
         this.bookRepository = bookRepository;
-        this.categoryRepository = categoryRepository;
-        this.authorRepository = authorRepository;
-        this.loanRepository = loanRepository;
+        this.categoryService = categoryService;
+        this.authorService = authorService;
     }
 
-
-    // listar libros
-    public Page<BookDTO> findAll(Pageable pageable) {
-        var books = bookRepository.findAll(pageable);
-        return books.map(BookDTO::new);
+    public Page<Book> findAll(Pageable pageable) {
+        return bookRepository.findAll(pageable);
     }
 
-    // mostrar libro segun id
-    public BookDTO findById(Long id) {
-        Book book = bookRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-        return new BookDTO(book);
+    public Book findById(Long id) {
+        return bookRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Book not found"));
     }
 
-    // mostrar libro segun isbn
-    public BookDTO findByIsbn(String isbn) {
-        var book = bookRepository.findByIsbn(isbn);
-        if  (book == null) return new BookDTO();
-        return new BookDTO(book);
+    public Book findByIsbn(String isbn) {
+        return bookRepository.findByIsbn(isbn)
+                .orElseThrow(() -> new NoSuchElementException("Book not found"));
     }
 
-    // buscar libro por titulo
-    public BookDTO findByTitle(String title) {
-        var book = bookRepository.findByTitle(title);
-        if  (book == null) throw new NoSuchElementException("Book not found");
-        return new BookDTO(book);
+    public Book findByTitle(String title) {
+        if (title.equals("n/a")) throw new NoSuchElementException("Title is required"); 
+        return bookRepository.findByTitle(title)
+                .orElseThrow(() -> new NoSuchElementException("Book not found"));
     }
 
-    // listar libros disponibles
     public List<BookDTO> findByAvailableCopies() {
         List<Book> books = bookRepository.findAllByAvailableCopies();
         if (books == null) return new ArrayList<>();
         return toDTOList(books);
     }
 
-    // agregar libro
     public BookDTO save(PostBookDTO postBookDTO) {
-        var category = categoryRepository.findById(postBookDTO.getCategoryId())
-                .orElseThrow(() -> new NoSuchElementException("Category not found"));
-
-        var author = authorRepository.findById(postBookDTO.getAuthorId())
-                .orElseThrow(() -> new NoSuchElementException("Author not found"));
-
+        var category = categoryService.findById(postBookDTO.getCategoryId());
+        var author = authorService.findById(postBookDTO.getAuthorId());
         var book = new Book(postBookDTO,  author, category);
         book =  bookRepository.save(book);
         return new BookDTO(book);
     }
 
-    // actualizar libro
-    public BookDTO update(PostBookDTO postBookDTO, Long id) {
-        var book = bookRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Book not found"));
+    public void save(Book book) {
+        book = bookRepository.save(book);
+    }
 
+    public BookDTO update(PostBookDTO postBookDTO, Long id) {
+        var book = findById(id);
         updateBook(book, postBookDTO);
         book = bookRepository.save(book);
         return new BookDTO(book);
     }
 
-    // eliminar libro
     public void delete(Long id) {
         boolean existsElement = bookRepository.existsById(id);
         if (!existsElement)  throw new NoSuchElementException("Book not found");
-
         bookRepository.deleteById(id);
     }
 
-    // mostrar datos sobre los libros
-    public Map<String, String> findMostBorrowedBooks() {
-
-        Map<String, String> stats = new HashMap<>();
-
-        // libro mas prestado
-        var mostBorrowedBooks = loanRepository.findMostBorrowedBook();
-        if (mostBorrowedBooks == null) mostBorrowedBooks = new Book();
-
-        stats.put("Libro mas prestado", mostBorrowedBooks.getTitle());
-
-        // miembro con mas prestamos activos
-        var memberWithMostLoans = loanRepository.findMemberWithMostLoans();
-        if (memberWithMostLoans == null) memberWithMostLoans = new Member();
-
-        stats.put("Miembro con mas prestamos activos",
-                        memberWithMostLoans.getFirstName() +
-                        " " +
-                        memberWithMostLoans.getLastName()
-        );
-
-        return stats;
+    public List<Book> findAllByAuthor(Author author) {
+        return bookRepository.findAllByAuthorIs(author);
     }
 
     // ----- metodos de mappeo -----
@@ -145,16 +109,12 @@ public class BookService {
         if (postBookDTO.getPublisher() != null) book.setPublisher(postBookDTO.getPublisher());
 
         if (postBookDTO.getCategoryId() != null) {
-            var category = categoryRepository.findById(postBookDTO.getCategoryId())
-                    .orElseThrow(() -> new NoSuchElementException("Category not found"));
-
+            var category = categoryService.findById(postBookDTO.getCategoryId());
             book.setCategory(category);
         }
 
         if  (postBookDTO.getAuthorId() != null) {
-            var author = authorRepository.findById(postBookDTO.getAuthorId())
-                    .orElseThrow(()  -> new NoSuchElementException("Author not found"));
-
+            var author = authorService.findById(postBookDTO.getAuthorId());
             book.setAuthor(author);
         }
     }

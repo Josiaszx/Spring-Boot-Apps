@@ -1,6 +1,7 @@
 package com.empresa.biblioteca.handler;
 
 import com.empresa.biblioteca.exception.InvalidOperationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -40,6 +41,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<?> handler(DataIntegrityViolationException ex) {
+        Map<String, String> body = new HashMap<>();
+        body.put("error message", ex.getMessage());
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handler(Exception ex) {
         return new ResponseEntity<>("some error happened", HttpStatus.INTERNAL_SERVER_ERROR);

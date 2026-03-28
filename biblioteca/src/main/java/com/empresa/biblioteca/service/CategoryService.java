@@ -20,39 +20,29 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    // listar todas las categorias
-    public Page<CategoryDTO> findAll(Pageable pageable) {
-        var categories = categoryRepository.findAll(pageable);
-        return categories.map(CategoryDTO::new);
+    public Page<Category> findAll(Pageable pageable) {
+        return categoryRepository.findAll(pageable);
     }
 
-    // agregar categoria
     public Category save(CategoryDTO categoryDTO) {
-        Category category = new Category(categoryDTO);
+        var category = new Category(categoryDTO);
         return categoryRepository.save(category);
     }
 
-    // obtener categoria por id
-    public CategoryDTO findById(Long id) {
-        Category category = categoryRepository.findById(id)
+    public Category findById(Long id) {
+        return categoryRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Category not found"));
-
-        return new CategoryDTO(category);
     }
 
-    // actualizar categoria
     public Category update(CategoryDTO categoryDTO, Long id) {
-        Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Category not found"));
-
+        var category = findById(id);
         if (categoryDTO.getName() != null) category.setName(categoryDTO.getName());
         if (categoryDTO.getDescription() != null) category.setDescription(categoryDTO.getDescription());
         return categoryRepository.save(category);
     }
 
-    // eliminar categoria
     public void delete(Long id) {
-        if (!categoryRepository.findById(id).isPresent()) throw new NoSuchElementException("Category not found");
+        if (categoryRepository.findById(id).isEmpty()) throw new NoSuchElementException("Category not found");
         categoryRepository.deleteById(id);
     }
 
@@ -65,5 +55,4 @@ public class CategoryService {
         }
         return dtoList;
     }
-
 }
