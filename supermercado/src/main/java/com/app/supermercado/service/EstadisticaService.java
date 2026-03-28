@@ -13,26 +13,20 @@ import java.util.Map;
 @Service
 public class EstadisticaService {
 
-    private DetalleVentaRepository detalleVentaRepository;
+    final private DetalleVentaRepository detalleVentaRepository;
 
     public EstadisticaService(DetalleVentaRepository detalleVentaRepository) {
         this.detalleVentaRepository = detalleVentaRepository;
     }
 
-    // producto mas vendido
     public ProductoMasVendido productoMasVendido() {
-
         var request = PageRequest.of(0, 1);
-
-        var producto = detalleVentaRepository.findProductoMasVendido(request).get(0);
-
-        var estadistica = ProductoMasVendido.builder()
+        var producto = detalleVentaRepository.findProductoMasVendido(request).getFirst();
+        return ProductoMasVendido.builder()
                 .productoId(producto.getId())
                 .nombre(producto.getNombre())
                 .categoria(producto.getCategoria())
                 .TotalVendido(detalleVentaRepository.totalVentasPorProducto(producto.getId()))
                 .build();
-
-        return estadistica;
     }
 }

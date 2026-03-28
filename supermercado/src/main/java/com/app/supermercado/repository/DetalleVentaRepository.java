@@ -18,5 +18,4 @@ public interface DetalleVentaRepository extends JpaRepository<DetalleVenta, Long
 
     @Query("SELECT SUM(dv.cantidad) FROM DetalleVenta dv WHERE dv.producto.id = :id")
     Integer totalVentasPorProducto(Long id);
-
 }

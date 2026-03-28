@@ -24,7 +24,7 @@ INSERT INTO ventas (fecha, estado, sucursal_id, total) VALUES (CURRENT_DATE, 'FI
 INSERT INTO detalle_venta (producto_id, venta_id, cantidad) VALUES (3, 2, 2);
 INSERT INTO detalle_venta (producto_id, venta_id, cantidad) VALUES (4, 2, 1);
 
--- Venta 3: Sucursal Sur (id: 3), Fecha: 2026-03-13 (Ayer)
+-- Venta 3: Sucursal Sur (id: 3), Fecha: 2026-03-13
 INSERT INTO ventas (fecha, estado, sucursal_id, total) VALUES ('2026-03-13', 'FINALIZADA', 3, 24000);
 -- Detalle Venta 3: 2 Detergentes (2 * 12000) = 24000
 INSERT INTO detalle_venta (producto_id, venta_id, cantidad) VALUES (5, 3, 2);

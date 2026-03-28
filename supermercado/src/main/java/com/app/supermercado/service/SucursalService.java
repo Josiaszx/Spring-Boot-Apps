@@ -10,41 +10,34 @@ import java.util.List;
 @Service
 public class SucursalService {
 
-    private SucursalRepository sucursalRepository;
+    final private SucursalRepository sucursalRepository;
 
     public SucursalService(SucursalRepository sucursalRepository) {
         this.sucursalRepository = sucursalRepository;
     }
 
-    // listar todas las sucursales
-    public List<SucursalDTO> listar() {
-        var sucursales = sucursalRepository.findAll();
-        return sucursales.stream()
-                .map(SucursalDTO::new)
-                .toList();
+    public List<Sucursal> listar() {
+        return sucursalRepository.findAll();
     }
 
-    // registrar nueva sucursal
-    public SucursalDTO registrar(SucursalDTO sucursalDTO) {
-        var sucursal = sucursalRepository.save(new Sucursal(sucursalDTO));
-        return new SucursalDTO(sucursal);
+    public Sucursal registrar(SucursalDTO sucursalDTO) {
+        return sucursalRepository.save(new Sucursal(sucursalDTO));
     }
 
-    // actualizar sucursal
-    public SucursalDTO actualizar(Long id, SucursalDTO sucursalDTO) {
+    public Sucursal actualizar(Long id, SucursalDTO sucursalDTO) {
         var sucursal = sucursalRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Sucursal no encontrada con ID: " + id));
-
         sucursal.setNombre(sucursalDTO.getNombre());
         sucursal.setDireccion(sucursalDTO.getDireccion());
-
-        sucursal = sucursalRepository.save(sucursal);
-        return new SucursalDTO(sucursal);
+        return sucursalRepository.save(sucursal);
     }
 
-    // eliminar sucursal
     public void eliminar(Long id) {
         sucursalRepository.deleteById(id);
     }
 
+    public Sucursal encontrarPorId(Long id) {
+        return sucursalRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Sucursal no encontrada con ID: " + id));
+    }
 }

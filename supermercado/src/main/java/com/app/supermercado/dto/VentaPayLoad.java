@@ -14,5 +14,4 @@ public class VentaPayLoad {
 
     private Long sucursalId;
     private List<DetalleProductoCantidad> detalle;
-
 }

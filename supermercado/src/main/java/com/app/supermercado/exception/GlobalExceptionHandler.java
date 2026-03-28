@@ -3,6 +3,7 @@ package com.app.supermercado.exception;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -40,5 +41,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(body);
     }
 
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<?> DataIntegrityViolationException(DataIntegrityViolationException ex) {
+        var body = new HashMap<String, String>();
+        body.put("mensaje", "No se puede completar la operacion debido a una violacion de integridad de datos");
+        body.put("status", HttpStatus.BAD_REQUEST.toString());
+        body.put("error", ex.getMessage());
+        log.error(ex.getMessage());
+        return ResponseEntity.badRequest().body(body);
+    }
 }
 

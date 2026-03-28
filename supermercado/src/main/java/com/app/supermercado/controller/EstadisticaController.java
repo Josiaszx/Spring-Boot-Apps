@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/estadisticas")
 public class EstadisticaController {
 
-    private EstadisticaService estadisticaService;
+    final private EstadisticaService estadisticaService;
 
     public EstadisticaController(EstadisticaService estadisticaService) {
         this.estadisticaService = estadisticaService;
@@ -20,5 +20,4 @@ public class EstadisticaController {
     public ProductoMasVendido productoMasVendido() {
         return estadisticaService.productoMasVendido();
     }
-
 }

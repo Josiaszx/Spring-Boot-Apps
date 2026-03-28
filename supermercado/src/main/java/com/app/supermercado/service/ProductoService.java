@@ -10,30 +10,21 @@ import java.util.List;
 @Service
 public class ProductoService {
 
-    private ProductoRepository productoRepository;
+    final private ProductoRepository productoRepository;
 
     public ProductoService(ProductoRepository productoRepository) {
         this.productoRepository = productoRepository;
     }
 
-    // listar productos registrados
-    public List<ProductoDTO> listarProductos() {
-        var productos = productoRepository.findAll();
-
-        return productos.stream()
-                .map(ProductoDTO::new)
-                .toList();
+    public List<Producto> listarProductos() {
+        return productoRepository.findAll();
     }
 
-    // registrar nuevo producto
-    public ProductoDTO guardarProducto(ProductoDTO productoDTO) {
-        var producto = new Producto(productoDTO);
-        productoRepository.save(producto);
-        return new ProductoDTO(producto);
+    public Producto guardarProducto(ProductoDTO productoDTO) {
+        return productoRepository.save(new Producto(productoDTO));
     }
 
-    // actualizar producto existente
-    public ProductoDTO actualizar(ProductoDTO productoDTO, Long id) {
+    public Producto actualizar(ProductoDTO productoDTO, Long id) {
         var producto = productoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado con ID: " + id));
 
@@ -42,13 +33,17 @@ public class ProductoService {
         producto.setPrecio(productoDTO.getPrecio());
         producto.setNombre(productoDTO.getNombre());
 
-        producto = productoRepository.save(producto);
-        return new ProductoDTO(producto);
+        return productoRepository.save(producto);
     }
 
-    // eliminar producto
     public void eliminar(Long id) {
-        productoRepository.deleteById(id);
+        var existsProduct = productoRepository.existsById(id);
+        if (existsProduct) productoRepository.deleteById(id);
+        else throw new IllegalArgumentException("Producto no encontrado con ID: " + id);
     }
 
+    public Producto encontrarPorId(Long id) {
+        return productoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado con ID: " + id));
+    }
 }
