@@ -82,10 +82,6 @@ public class LoanService {
         return loanRepository.findMostBorrowedBook();
     }
 
-    public Member findMemberWithMostLoans() {
-        return loanRepository.findMemberWithMostLoans();
-    }
-
     public List<LoanDTO> findAllMemberLoans(Long idUser) {
         var member = memberService.findById(idUser);
         var memberLoans = loanRepository.findAllByMemberIs(member);

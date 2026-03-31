@@ -42,7 +42,10 @@ public class Book {
 
 
     // constructores y getters/setters
-    public Book(Long id, String isbn, String title, String publisher, LocalDate publishedDate, Integer availableCopies, Integer totalCopies, Author author, Category category) {
+    public Book(Long id, String isbn, String title,
+                String publisher, LocalDate publishedDate, Integer availableCopies,
+                Integer totalCopies, Author author, Category category
+    ) {
         this.id = id;
         this.isbn = isbn;
         this.title = title;

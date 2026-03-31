@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.util.*;
 
@@ -47,13 +48,11 @@ public class GlobalExceptionHandler {
         body.put("error message", ex.getMessage());
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handler(Exception ex) {
-        return new ResponseEntity<>("some error happened", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<?> handler(RuntimeException ex) {
-        return new ResponseEntity<>("some error happened", HttpStatus.INTERNAL_SERVER_ERROR);
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<?> handler(NoHandlerFoundException ex) {
+        Map<String, String> body = new HashMap<>();
+        body.put("error message", ex.getMessage());
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 }

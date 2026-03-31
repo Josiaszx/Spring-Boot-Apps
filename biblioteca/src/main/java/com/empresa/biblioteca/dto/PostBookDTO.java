@@ -1,5 +1,6 @@
 package com.empresa.biblioteca.dto;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -29,7 +30,7 @@ public class PostBookDTO {
     private Integer totalCopies;
 
     @NotNull(message = "available copies cannot be null")
-    @Size(message = "available copies cannot be less than 0")
+    @Min(value = 0, message = "available copies cannot be less than 0")
     private Integer availableCopies;
 
     @NotNull(message = "author id cannot be null")

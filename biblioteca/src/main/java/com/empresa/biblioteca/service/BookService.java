@@ -1,14 +1,11 @@
 package com.empresa.biblioteca.service;
 
 import com.empresa.biblioteca.dto.BookDTO;
+import com.empresa.biblioteca.exception.InvalidOperationException;
 import com.empresa.biblioteca.model.Author;
 import com.empresa.biblioteca.model.Book;
 import com.empresa.biblioteca.dto.PostBookDTO;
-import com.empresa.biblioteca.model.Member;
-import com.empresa.biblioteca.repository.AuthorRepository;
 import com.empresa.biblioteca.repository.BookRepository;
-import com.empresa.biblioteca.repository.CategoryRepository;
-import com.empresa.biblioteca.repository.LoanRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -59,6 +56,9 @@ public class BookService {
     }
 
     public BookDTO save(PostBookDTO postBookDTO) {
+        var availableCopies = postBookDTO.getAvailableCopies();
+        var totalCopies = postBookDTO.getTotalCopies();
+        if (totalCopies < availableCopies) throw new InvalidOperationException("Total copies cannot be less than the available copies");
         var category = categoryService.findById(postBookDTO.getCategoryId());
         var author = authorService.findById(postBookDTO.getAuthorId());
         var book = new Book(postBookDTO,  author, category);
@@ -67,7 +67,7 @@ public class BookService {
     }
 
     public void save(Book book) {
-        book = bookRepository.save(book);
+        bookRepository.save(book);
     }
 
     public BookDTO update(PostBookDTO postBookDTO, Long id) {

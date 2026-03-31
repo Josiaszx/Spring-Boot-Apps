@@ -6,7 +6,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-public class BibliotecaApplication {
+public class    BibliotecaApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(BibliotecaApplication.class, args);
